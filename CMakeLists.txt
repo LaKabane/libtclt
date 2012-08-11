@@ -34,6 +34,7 @@ include_directories(${YAJL_INCLUDE_DIR})
 # ------------------
 set(SOURCES_LIST
   ${CMAKE_SOURCE_DIR}/tclt.c
+  ${CMAKE_SOURCE_DIR}/json_parse.c
 )
 
 # OS families specific things
