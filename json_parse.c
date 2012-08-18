@@ -21,11 +21,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef QT
+
+#include <QVariant>
+
+static QVariant createVariantSimple(elements **e, bool &ok);
+static QVariant createVariantArray(elements **e, bool &ok);
+static QVariant createVariantMap(elements **e, bool &ok);
+static QVariant createVariantWithKey(elements **e, bool &ok);
+
+#endif
+
 static elements*
 new_element()
 {
 	elements *e;
-	e = malloc(sizeof(*e));
+	e = (elements*)malloc(sizeof(*e));
 	if (e == NULL)
 		return NULL;
 	e->next = NULL;
@@ -42,7 +53,6 @@ yajl_null(void *ctx)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("null\n");
 	if (ele == NULL || (*ele) == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -54,7 +64,6 @@ yajl_null(void *ctx)
 	e->u_value.boolean = 0;
 	e->type = NULL_ELE;
 	*ele = e->next;
-	printf("end of null\n");
 	return 1;
 }
 
@@ -64,7 +73,6 @@ yajl_boolean(void *ctx, int boolean)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("bool=%i\n", boolean);
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -76,7 +84,6 @@ yajl_boolean(void *ctx, int boolean)
 	e->u_value.boolean = boolean;
 	e->type = BOOL;
 	*ele = e->next;
-	printf("end of boolean   %d\n", e->u_value.boolean);
 	return 1;
 }
 
@@ -86,7 +93,6 @@ yajl_integer(void *ctx, long long val)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("integer %lld\n", val);
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -98,7 +104,6 @@ yajl_integer(void *ctx, long long val)
 	e->u_value.integer = 0;
 	e->type = INT;
 	*ele = e->next;
-	printf("end of integer  %lld\n", e->u_value.integer);
 	return 1;
 }
 
@@ -108,7 +113,6 @@ yajl_double(void *ctx, double val)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("double %f\n", val);
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -120,7 +124,6 @@ yajl_double(void *ctx, double val)
 	e->u_value.floating = val;
 	e->type = DOUBLE;
 	*ele = e->next;
-	printf("end of double  %f\n", e->u_value.floating);
 	return 1;
 }
 
@@ -130,7 +133,6 @@ yajl_number(void *ctx, const char* s, size_t l)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("number start %s  %d\n", s, l);
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -142,7 +144,6 @@ yajl_number(void *ctx, const char* s, size_t l)
 	e->u_value.buf = strndup(s, l);
 	e->type = NUMBER;
 	*ele = e->next;
-	printf("end of number   %s\n", e->u_value.buf);
 	return 1;
 }
 
@@ -152,7 +153,6 @@ yajl_string(void *ctx, const unsigned char* s, size_t l)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("string start %s  %d\n", s, l);
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -161,10 +161,9 @@ yajl_string(void *ctx, const unsigned char* s, size_t l)
 	e = *ele;
 	/* e->name = NULL; */
 	/* e->len = 0; */
-	e->u_value.buf = strndup(s, l);
+	e->u_value.buf = strndup((const char*)s, l);
 	e->type = STRING;
 	*ele = e->next;
-	printf("end of string  %s\n", e->u_value.buf);
 	return 1;
 }
 
@@ -174,7 +173,6 @@ yajl_start_map(void *ctx)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("map_start\n");
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -186,7 +184,6 @@ yajl_start_map(void *ctx)
 	e->u_value.boolean = 0;
 	e->type = START_MAP;
 	*ele = e->next;
-	printf("end of map_start\n");
 	return 1;
 }
 
@@ -196,7 +193,6 @@ yajl_map_key(void *ctx, const unsigned char* s, size_t l)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("map_Key=%s, %d\n", s, l);
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -205,10 +201,9 @@ yajl_map_key(void *ctx, const unsigned char* s, size_t l)
 	e = *ele;
 	/* e->name = NULL; */
 	/* e->len = 0; */
-	e->u_value.buf = strndup(s, l);
+	e->u_value.buf = strndup((const char *)s, l);
 	e->type = MAP_KEY;
 	*ele = e->next;
-	printf("end of map key %s\n", e->u_value.buf);
 	return 1;
 }
 
@@ -218,7 +213,6 @@ yajl_end_map(void *ctx)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("map end start\n");
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -230,7 +224,6 @@ yajl_end_map(void *ctx)
 	e->u_value.boolean = 0;
 	e->type = END_MAP;
 	*ele = e->next;
-	printf("end of map end\n");
 	return 1;
 }
 
@@ -240,7 +233,6 @@ yajl_start_array(void *ctx)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("array_start\n");
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -252,7 +244,6 @@ yajl_start_array(void *ctx)
 	e->u_value.boolean = 0;
 	e->type = START_ARRAY;
 	*ele = e->next;
-	printf("end of array_start\n");
 	return 1;
 }
 
@@ -262,7 +253,6 @@ yajl_end_array(void *ctx)
 	elements **ele = (elements**)ctx;
 	elements *e;
 
-	printf("array_end\n");
 	if (ele == NULL || *ele == NULL)
 		return -1;
 	if ((e = new_element()) == NULL)
@@ -274,7 +264,6 @@ yajl_end_array(void *ctx)
 	e->u_value.boolean = 0;
 	e->type = END_ARRAY;
 	*ele = e->next;
-	printf("end of array_end\n");
 	return 1;
 }
 
@@ -293,7 +282,7 @@ static yajl_callbacks callbacks = {
 };
 
 elements*
-parse(const unsigned char *buf, size_t len)
+parse(const char *buf, size_t len)
 {
 	yajl_handle handler;
 	yajl_status status;
@@ -304,10 +293,10 @@ parse(const unsigned char *buf, size_t len)
 		return NULL;
 	first = e;
 	handler = yajl_alloc(&callbacks, NULL, &e);
-	status = yajl_parse(handler, buf, len);
+	status = yajl_parse(handler, (const unsigned char*)buf, len);
 
 	if (status != yajl_status_ok) {
-		unsigned char * str = yajl_get_error(handler, 1, buf, len);
+		unsigned char * str = yajl_get_error(handler, 1, (const unsigned char*)buf, len);
 		fprintf(stderr, "%s", (const char *) str);
 		yajl_free_error(handler, str);
 		return NULL;
@@ -315,10 +304,169 @@ parse(const unsigned char *buf, size_t len)
 
 	status = yajl_complete_parse(handler);
 	if (status != yajl_status_ok) {
-		unsigned char * str = yajl_get_error(handler, 1, buf, len);
+		unsigned char * str = yajl_get_error(handler, 1, (const unsigned char*)buf, len);
 		fprintf(stderr, "%s", (const char *) str);
 		yajl_free_error(handler, str);
 	}
 	yajl_free(handler);
 	return first;
 }
+
+#ifdef QT
+
+eType types[] =
+	{
+		{START_MAP, &createVariantMap},
+		{START_ARRAY, &createVariantArray},
+	};
+
+static QVariant
+createVariantSimple(elements **e, bool &ok)
+{
+	QVariant qvar;
+
+	if (e != 0 && *e != 0)
+	{
+		qvar.setValue(QString((*e)->u_value.buf));
+	}
+	return qvar;
+}
+
+static QVariant
+createVariantMap(elements **e, bool &ok)
+{
+	QMap<QString, QVariant> qmap;
+
+	if (e != 0)
+	{
+		while (*e != NULL && (*e)->type != NOTHING && (*e)->type != END_MAP)
+		{
+			if (*e != 0 && (*e)->type == MAP_KEY)
+			{
+				QString key((*e)->u_value.buf);
+				*e = (*e)->next;
+				if ((*e)->type == START_ARRAY || (*e)->type == START_MAP)
+				{
+					for (int i=0; i < (sizeof(types) / sizeof(eType)); ++i)
+					{
+						if (types[i].type == (*e)->type)
+						{
+							*e = (*e)->next;
+							QVariant ret = types[i].fun(e, ok);
+							qmap[key] = ret;
+							break;
+						}
+					}
+				}
+				else if ((*e)->type != NOTHING)
+				{
+					QVariant ret = createVariantSimple(e, ok);
+					qmap[key] = ret;
+					*e = (*e)->next;
+				}
+				else if (*e != NULL)
+					*e = (*e)->next;
+			}
+		}
+		if (*e != NULL && (*e)->type == END_MAP)
+		{
+			*e = (*e)->next;
+			return qmap;
+		}
+	}
+	ok = false;
+	return qmap;
+}
+
+static QVariant
+createVariantArray(elements **e, bool &ok)
+{
+	QVariantList qlist;
+
+	if (e != 0)
+	{
+		while (*e != NULL && (*e)->type != NOTHING && (*e)->type != END_ARRAY)
+		{
+			if ((*e)->type == START_ARRAY || (*e)->type == START_MAP)
+			{
+				for (int i=0; i < (sizeof(types) / sizeof(eType)); ++i)
+				{
+					if (types[i].type == (*e)->type)
+					{
+						*e = (*e)->next;
+						QVariant ret = types[i].fun(e, ok);
+						qlist.append(ret);
+						break;
+					}
+				}
+
+			}
+			else
+			{
+				QVariant ret = createVariantSimple(e, ok);
+				qlist.append(ret);
+				*e = (*e)->next;
+			}
+		}
+		if ((*e) != NULL && (*e)->type == END_ARRAY)
+		{
+			*e = (*e)->next;
+			return qlist;
+		}
+	}
+	ok = false;
+	return qlist;
+}
+
+static QVariant*
+createVariant(elements *e)
+{
+	QVariant *qvar = 0;
+	elements *tmp = e;
+
+	if (tmp != NULL && tmp->type != NOTHING)
+	{
+		if (tmp->type == START_ARRAY || tmp->type == START_MAP)
+		{
+			for (unsigned int i=0; i < sizeof(types)/sizeof(eType); ++i)
+			{
+				tmp = tmp->next;
+				bool ok = true;
+				QVariant ret = createVariantArray(&tmp, ok);
+				if (ok == false)
+				{
+					fprintf(stderr, "Problem to parse the elements list\n");
+					return 0;
+				}
+				qvar = new QVariant(ret);
+				if (qvar == 0)
+				{
+					fprintf(stderr, "Error to allocate a new QVariant\n");
+					return 0;
+				}
+				break;
+			}
+		}
+	}
+	if (tmp != NULL && tmp->type != NOTHING)
+	{
+		fprintf(stderr, "Error, buffer received not at the end\n");
+		return qvar;
+	}
+	return qvar;
+}
+
+QVariant*
+getVariant(const char *buf, size_t len)
+{
+	QVariant* qvar = 0;
+	elements* e = parse(buf, len);
+
+	if (e == 0)
+		return 0;
+
+	qvar = createVariant(e);
+	return qvar;
+}
+
+#endif /* !QT */
