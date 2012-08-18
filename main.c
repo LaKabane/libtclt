@@ -94,22 +94,31 @@ restore_chain(elements *e)
 	}
 }
 
+#include <QVariant>
+#include <QDebug>
 int main()
 {
-	const unsigned char * buf = "[{\"AddContact\": {\"name1\": {\"Key\":\"key1\"}, \"name2\": {\"Key\":\"key2\"}}}]";
-	size_t len = 68;
+	const char * buf = "[{\"AddContact\": {\"Name\": \"name1\", \"Key\":\"key1\"}}]";
+	size_t len = 49;
 	//const unsigned char * buf = "[{\"lol\":false},{\"lol2\":false}]";
 	//size_t len = 30;
 	elements *e;
 
+	printf("len=%d\n", strlen((const char*)buf));
 	printf("====start test====\n");
-	printf("try with : [%s]\n\n", buf);
-	printf("%d\n", strlen(buf));
-	e = parse(buf, len);
+	printf("try with : '%s'\n\n", buf);
+	//e = parse(buf, len);
+	QVariant *var = getVariant(buf, len);
+	if (var == 0)
+	{
+		printf("faileddddd\n");
+		return 1;
+	}
 	printf("\n\n");
 	printf("=====Result==\n");
 	//show_chain(e);
-	restore_chain(e);
+	//restore_chain(e);
+	qDebug() << *var;
 	printf("\n\n");
 	printf("====end   test====\n");
 	return 0;
