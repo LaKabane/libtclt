@@ -4,6 +4,9 @@
 project(libtclt)
 cmake_minimum_required(VERSION 2.8)
 
+set (libtclt_VERSION_MAJOR 0)
+set (libtclt_VERSION_MINOR 1)
+
 # CMake Configuration
 # ------------------
 set(CMAKE_MODULE_PATH ${CMAME_MODULE_PATH} ${CMAKE_SOURCE_DIR}/util/cmake/Modules/)
@@ -136,8 +139,17 @@ endif()
 
 # Library definitons
 # ------------------
-add_library(tclt SHARED
-  ${SOURCES_LIST})
+add_library (tclt SHARED
+  ${SOURCES_LIST}
+)
+
+if (Linux)
+	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_json.h DESTINATION include)
+	#set_target_properties(tclt PROPERTIES VERSION 0.1 SOVERSION 0)
+	SET(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
+	install (TARGETS tclt DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif (Linux)
+
 
 
 # Global linked libraries
