@@ -14,23 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "json_parse.h"
+#include "tclt_json.h"
 #include <yajl/yajl_parse.h>
 #include <yajl/yajl_gen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef QT
-
-#include <QVariant>
-
-static QVariant createVariantSimple(elements **e, bool &ok);
-static QVariant createVariantArray(elements **e, bool &ok);
-static QVariant createVariantMap(elements **e, bool &ok);
-static QVariant createVariantWithKey(elements **e, bool &ok);
-
-#endif
 
 static elements*
 new_element()
