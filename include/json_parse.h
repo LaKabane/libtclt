@@ -19,10 +19,6 @@
 
 #include <stddef.h>
 
-#ifdef QT
-#include <QVariant>
-#endif /* QT */
-
 struct s_string
 {
 	char* buf;
@@ -64,20 +60,5 @@ struct s_elements
 typedef struct s_elements elements;
 
 elements *parse(const char*, size_t);
-
-#ifdef QT
-
-struct s_elementType
-{
-	enum element_type type;
-	QVariant (*fun)(elements **e, bool &ok);
-};
-
-typedef struct s_elementType eType;
-
-QVariant *getVariant(const char *buf, size_t len);
-
-
-#endif
 
 #endif
