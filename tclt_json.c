@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Florent Tribouilloy <florent.tribouilloy AT epitech DOT net>
+ * Copyright (c) 2012 Florent Tribouilloy <tribou_f AT epitech DOT net>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -271,7 +271,7 @@ static yajl_callbacks callbacks = {
 };
 
 elements*
-parse(const char *buf, size_t len)
+tclt_parse(const char *buf, size_t len)
 {
 	yajl_handle handler;
 	yajl_status status;

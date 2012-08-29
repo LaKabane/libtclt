@@ -14,11 +14,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef JSON_PARSE_H_
-#define JSON_PARSE_H_
+#ifndef TCLT_JSON_H_
+# define TCLT_JSON_H_
 
 #include <stddef.h>
 
+# ifdef __cplusplus
+extern "C" {
+# endif
+	
 struct s_string
 {
 	char* buf;
@@ -59,6 +63,10 @@ struct s_elements
 
 typedef struct s_elements elements;
 
-elements *parse(const char*, size_t);
+elements *tclt_parse(const char*, size_t);
+
+# ifdef __cplusplus
+}
+# endif
 
 #endif
