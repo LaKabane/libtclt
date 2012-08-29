@@ -4,15 +4,13 @@
 project(libtclt)
 cmake_minimum_required(VERSION 2.8)
 
-set (libtclt_VERSION_MAJOR 0)
-set (libtclt_VERSION_MINOR 1)
-
 # CMake Configuration
 # ------------------
 set(CMAKE_MODULE_PATH ${CMAME_MODULE_PATH} ${CMAKE_SOURCE_DIR}/util/cmake/Modules/)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(CMAKE_INSTALL_PREFIX "/usr/local/")
 set(${CMAKE_SYSTEM_NAME} True)
 
 include(${CMAKE_SOURCE_DIR}/CMakeLists.txt.local OPTIONAL)
@@ -36,8 +34,8 @@ include_directories(${YAJL_INCLUDE_DIR})
 # Portable source files
 # ------------------
 set(SOURCES_LIST
-  ${CMAKE_SOURCE_DIR}/tclt.c
   ${CMAKE_SOURCE_DIR}/json_parse.c
+  ${CMAKE_SOURCE_DIR}/tclt.c
 )
 
 # OS families specific things
@@ -53,8 +51,8 @@ if(UNIX)
 
 	# Unix specific source files
 	# ------------------
-	set(SOURCES_LIST ${SOURCES_LIST}
-	  )
+	# set(SOURCES_LIST ${SOURCES_LIST}
+	#   )
 endif()
 
 if (Windows)
@@ -139,18 +137,11 @@ endif()
 
 # Library definitons
 # ------------------
-add_library (tclt SHARED
+message(${SOURCES_LIST})
+add_library (tclt
+  SHARED
   ${SOURCES_LIST}
 )
-
-if (Linux)
-	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_json.h DESTINATION include)
-	#set_target_properties(tclt PROPERTIES VERSION 0.1 SOVERSION 0)
-	SET(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
-	install (TARGETS tclt DESTINATION ${CMAKE_INSTALL_LIBDIR})
-endif (Linux)
-
-
 
 # Global linked libraries
 # ------------------
@@ -173,3 +164,8 @@ if (Windows)
 endif()
 
 include(${CMAKE_SOURCE_DIR}/CMakeLists.txt.link.local OPTIONAL)
+
+if (Linux)
+	install (TARGETS tclt DESTINATION lib)
+	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_json.h DESTINATION include)
+endif (Linux)
