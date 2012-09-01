@@ -34,7 +34,7 @@ include_directories(${YAJL_INCLUDE_DIR})
 # Portable source files
 # ------------------
 set(SOURCES_LIST
-  ${CMAKE_SOURCE_DIR}/json_parse.c
+  ${CMAKE_SOURCE_DIR}/tclt_json.c
   ${CMAKE_SOURCE_DIR}/tclt.c
 )
 
