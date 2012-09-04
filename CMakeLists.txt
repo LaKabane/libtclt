@@ -137,7 +137,6 @@ endif()
 
 # Library definitons
 # ------------------
-message(${SOURCES_LIST})
 add_library (tclt
   SHARED
   ${SOURCES_LIST}
