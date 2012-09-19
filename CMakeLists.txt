@@ -164,7 +164,7 @@ endif()
 
 include(${CMAKE_SOURCE_DIR}/CMakeLists.txt.link.local OPTIONAL)
 
-if (Linux)
+if (UNIX)
 	install (TARGETS tclt DESTINATION lib)
 	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_json.h DESTINATION include)
-endif (Linux)
+endif (UNIX)
