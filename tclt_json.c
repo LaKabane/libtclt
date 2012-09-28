@@ -21,6 +21,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if Windows
+static char *
+strndup(char *src, size_t size)
+{
+    char *tmp;
+
+    tmp = (char *)malloc(size);
+    if (tmp == NULL)
+        return NULL;
+    return (char *)memcpy(tmp, src, size);
+}
+#endif
+
 static elements*
 new_element()
 {
@@ -32,7 +45,7 @@ new_element()
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.boolean = 0;
-	e->type = NOTHING;
+	e->type = E_NOTHING;
 	return e;
 }
 
@@ -51,7 +64,7 @@ yajl_null(void *ctx)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.boolean = 0;
-	e->type = NULL_ELE;
+	e->type = E_NULL_ELE;
 	*ele = e->next;
 	return 1;
 }
@@ -71,7 +84,7 @@ yajl_boolean(void *ctx, int boolean)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.boolean = boolean;
-	e->type = BOOL;
+	e->type = E_BOOL;
 	*ele = e->next;
 	return 1;
 }
@@ -91,7 +104,7 @@ yajl_integer(void *ctx, long long val)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.integer = 0;
-	e->type = INT;
+	e->type = E_INT;
 	*ele = e->next;
 	return 1;
 }
@@ -111,7 +124,7 @@ yajl_double(void *ctx, double val)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.floating = val;
-	e->type = DOUBLE;
+	e->type = E_DOUBLE;
 	*ele = e->next;
 	return 1;
 }
@@ -131,7 +144,7 @@ yajl_number(void *ctx, const char* s, size_t l)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.buf = strndup(s, l);
-	e->type = NUMBER;
+	e->type = E_NUMBER;
 	*ele = e->next;
 	return 1;
 }
@@ -151,7 +164,7 @@ yajl_string(void *ctx, const unsigned char* s, size_t l)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.buf = strndup((const char*)s, l);
-	e->type = STRING;
+	e->type = E_STRING;
 	*ele = e->next;
 	return 1;
 }
@@ -171,7 +184,7 @@ yajl_start_map(void *ctx)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.boolean = 0;
-	e->type = START_MAP;
+	e->type = E_START_MAP;
 	*ele = e->next;
 	return 1;
 }
@@ -191,7 +204,7 @@ yajl_map_key(void *ctx, const unsigned char* s, size_t l)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.buf = strndup((const char *)s, l);
-	e->type = MAP_KEY;
+	e->type = E_MAP_KEY;
 	*ele = e->next;
 	return 1;
 }
@@ -211,7 +224,7 @@ yajl_end_map(void *ctx)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.boolean = 0;
-	e->type = END_MAP;
+	e->type = E_END_MAP;
 	*ele = e->next;
 	return 1;
 }
@@ -231,7 +244,7 @@ yajl_start_array(void *ctx)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.boolean = 0;
-	e->type = START_ARRAY;
+	e->type = E_START_ARRAY;
 	*ele = e->next;
 	return 1;
 }
@@ -251,7 +264,7 @@ yajl_end_array(void *ctx)
 	/* e->name = NULL; */
 	/* e->len = 0; */
 	e->u_value.boolean = 0;
-	e->type = END_ARRAY;
+	e->type = E_END_ARRAY;
 	*ele = e->next;
 	return 1;
 }

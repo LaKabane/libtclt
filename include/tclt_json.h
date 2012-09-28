@@ -18,6 +18,7 @@
 # define TCLT_JSON_H_
 
 #include <stddef.h>
+#include "import.h"
 
 # ifdef __cplusplus
 extern "C" {
@@ -33,18 +34,18 @@ typedef struct s_string string;
 
 enum element_type
 {
-	NOTHING,
-	NULL_ELE,
-	BOOL,
-	INT,
-	DOUBLE,
-	NUMBER,
-	STRING,
-	MAP_KEY,
-	START_MAP,
-	END_MAP,
-	START_ARRAY,
-	END_ARRAY
+	E_NOTHING,
+	E_NULL_ELE,
+	E_BOOL,
+	E_INT,
+	E_DOUBLE,
+	E_NUMBER,
+	E_STRING,
+	E_MAP_KEY,
+	E_START_MAP,
+	E_END_MAP,
+	E_START_ARRAY,
+	E_END_ARRAY
 };
 
 struct s_elements
@@ -63,7 +64,7 @@ struct s_elements
 
 typedef struct s_elements elements;
 
-elements *tclt_parse(const char*, size_t);
+TCLT_EXPORT elements *tclt_parse(const char*, size_t);
 
 # ifdef __cplusplus
 }
