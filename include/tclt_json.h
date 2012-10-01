@@ -18,7 +18,10 @@
 # define TCLT_JSON_H_
 
 #include <stddef.h>
+
+#ifdef Windows
 #include "import.h"
+#endif
 
 # ifdef __cplusplus
 extern "C" {
@@ -64,7 +67,11 @@ struct s_elements
 
 typedef struct s_elements elements;
 
+#ifdef Windows
 TCLT_EXPORT elements *tclt_parse(const char*, size_t);
+#else
+elements *tclt_parse(const char*, size_t);
+#endif
 
 # ifdef __cplusplus
 }
