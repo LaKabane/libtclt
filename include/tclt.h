@@ -17,12 +17,22 @@
 #ifndef TNETACLE_TCLT_H_
 #define TNETACLE_TCLT_H_
 
-#include "import.h"
+#ifdef Windows
 
-#define		LIB_TNETACLE_CLIENT_VERSION 1
+#include "import.h"
 
 TCLT_EXPORT void		tnt_tclt_init(void);
 TCLT_EXPORT void		tnt_tclt_destroy(void);
 TCLT_EXPORT int		tnt_tclt_get_version(void);
+
+#else
+
+void		tnt_tclt_init(void);
+void		tnt_tclt_destroy(void);
+int		tnt_tclt_get_version(void);
+
+#endif
+
+#define		LIB_TNETACLE_CLIENT_VERSION 1
 
 #endif
