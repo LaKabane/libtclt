@@ -53,16 +53,14 @@ enum element_type
 
 struct s_elements
 {
-	struct s_elements* next;
-	/* char *name; */
-	/* size_t len; */
-	union {
-		int boolean;
-		long long integer;
-		double floating;
-		char *buf;
-	} u_value;
-	enum element_type type;
+    struct s_elements* next;
+    enum element_type type;
+    union {
+        int boolean;
+        long long integer;
+        double floating;
+        char *buf;
+    } u_value;
 };
 
 typedef struct s_elements elements;
