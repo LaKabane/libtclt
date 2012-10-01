@@ -14,25 +14,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef TNETACLE_TCLT_H_
-#define TNETACLE_TCLT_H_
+#ifndef TNETACLE_IMPORT_H_
+#define TNETACLE_IMPORT_H_
 
-#ifdef Windows
-
-#include "import.h"
-
-TCLT_EXPORT void		tnt_tclt_init(void);
-TCLT_EXPORT void		tnt_tclt_destroy(void);
-TCLT_EXPORT int		tnt_tclt_get_version(void);
-
-#else
-
-void		tnt_tclt_init(void);
-void		tnt_tclt_destroy(void);
-int		tnt_tclt_get_version(void);
-
+#if defined (_WIN32) 
+  #if defined(MyLibrary_EXPORTS)
+    #define  TCLT_EXPORT __declspec(dllexport)
+  #else
+    #define  TCLT_EXPORT __declspec(dllimport)
+  #endif /* MyLibrary_EXPORTS */
+#else /* defined (_WIN32) */
+ #define TCLT_EXPORT
 #endif
 
-#define		LIB_TNETACLE_CLIENT_VERSION 1
-
-#endif
+#endif /* TNETACLE_IMPORT_H_ */

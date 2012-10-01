@@ -19,6 +19,10 @@
 
 #include <stddef.h>
 
+#ifdef Windows
+#include "import.h"
+#endif
+
 # ifdef __cplusplus
 extern "C" {
 # endif
@@ -33,18 +37,18 @@ typedef struct s_string string;
 
 enum element_type
 {
-    NOTHING,
-    NULL_ELE,
-    BOOL,
-    INT,
-    DOUBLE,
-    NUMBER,
-    STRING,
-    MAP_KEY,
-    START_MAP,
-    END_MAP,
-    START_ARRAY,
-    END_ARRAY
+    E_NOTHING,
+    E_NULL_ELE,
+    E_BOOL,
+    E_INT,
+    E_DOUBLE,
+    E_NUMBER,
+    E_STRING,
+    E_MAP_KEY,
+    E_START_MAP,
+    E_END_MAP,
+    E_START_ARRAY,
+    E_END_ARRAY
 };
 
 struct s_elements
@@ -61,7 +65,11 @@ struct s_elements
 
 typedef struct s_elements elements;
 
+#ifdef Windows
+TCLT_EXPORT elements *tclt_parse(const char*, size_t);
+#else
 elements *tclt_parse(const char*, size_t);
+#endif
 
 # ifdef __cplusplus
 }
