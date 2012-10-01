@@ -33,32 +33,30 @@ typedef struct s_string string;
 
 enum element_type
 {
-	NOTHING,
-	NULL_ELE,
-	BOOL,
-	INT,
-	DOUBLE,
-	NUMBER,
-	STRING,
-	MAP_KEY,
-	START_MAP,
-	END_MAP,
-	START_ARRAY,
-	END_ARRAY
+    NOTHING,
+    NULL_ELE,
+    BOOL,
+    INT,
+    DOUBLE,
+    NUMBER,
+    STRING,
+    MAP_KEY,
+    START_MAP,
+    END_MAP,
+    START_ARRAY,
+    END_ARRAY
 };
 
 struct s_elements
 {
-	struct s_elements* next;
-	/* char *name; */
-	/* size_t len; */
-	union {
-		int boolean;
-		long long integer;
-		double floating;
-		char *buf;
-	} u_value;
-	enum element_type type;
+    struct s_elements* next;
+    enum element_type type;
+    union {
+        int boolean;
+        long long integer;
+        double floating;
+        char *buf;
+    } u_value;
 };
 
 typedef struct s_elements elements;
