@@ -17,7 +17,7 @@
 #ifndef TNETACLE_IMPORT_H_
 #define TNETACLE_IMPORT_H_
 
-#if defined (_WIN32) 
+#if defined (Windows)
   #if defined(MyLibrary_EXPORTS)
     #define  TCLT_EXPORT __declspec(dllexport)
   #else
