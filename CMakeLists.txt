@@ -168,3 +168,7 @@ if (UNIX)
 	install (TARGETS tclt DESTINATION lib)
 	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_json.h DESTINATION include)
 endif (UNIX)
+
+if (Regress)
+  include (${CMAKE_SOURCE_DIR}/regress/CMakeLists.txt)
+endif (Regress)

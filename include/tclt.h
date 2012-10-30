@@ -17,22 +17,43 @@
 #ifndef TNETACLE_TCLT_H_
 #define TNETACLE_TCLT_H_
 
-#ifdef Windows
+#include "tclt_import.h"
 
-#include "import.h"
+TCLT_EXPORT void    tclt_init(void);
+TCLT_EXPORT void    tclt_destroy(void);
+TCLT_EXPORT int     tclt_get_versin(void);
 
-TCLT_EXPORT void		tnt_tclt_init(void);
-TCLT_EXPORT void		tnt_tclt_destroy(void);
-TCLT_EXPORT int		tnt_tclt_get_version(void);
+/*
+*** Peer related
+ */
+TCLT_EXPORT void    tclt_add_peer();
+TCLT_EXPORT void    tclt_add_list_of_peers();
+TCLT_EXPORT char    *tclt_add_connection();
+TCLT_EXPORT void    tclt_add_tunnel();
 
-#else
+TCLT_EXPORT void    tclt_delete_connection();
+TCLT_EXPORT void    tclt_stop_tunnel();
+TCLT_EXPORT void    tclt_delete_peer();
+TCLT_EXPORT void    tclt_clear_peers();
 
-void		tnt_tclt_init(void);
-void		tnt_tclt_destroy(void);
-int		tnt_tclt_get_version(void);
+TCLT_EXPORT void    tclt_edit_peer();
 
-#endif
+/*
+*** Group related
+*/
+TCLT_EXPORT void    tclt_create_group();
+TCLT_EXPORT void    tclt_destroy_group();
+TCLT_EXPORT void    tclt_add_peer_to_group();
+TCLT_EXPORT void    tclt_clear_group();
 
-#define		LIB_TNETACLE_CLIENT_VERSION 1
+/*
+*** Administration related
+*/
+TCLT_EXPORT void    tclt_edit_config();
+TCLT_EXPORT void    tclt_add_public_key();
+TCLT_EXPORT void    tclt_add_key_for_peer();
+TCLT_EXPORT void    tclt_add_key_for_client();
+
+#define    LIB_TNETACLE_CLIENT_VERSION 2
 
 #endif

@@ -22,17 +22,85 @@
 #include "tclt.h"
 
 void
-tnt_tclt_init(void) {
+tclt_init(void) {
 	/* Do nothing for the moment */
 }
 
 void
-tnt_tclt_destroy(void) {
+tclt_destroy(void) {
 	/* Do nothing for the moment */
 }
 
 int
-tnt_tclt_get_version(void) {
+tclt_get_version(void) {
 	return LIB_TNETACLE_CLIENT_VERSION;
 }
 
+void    tclt_add_peer()
+{
+}
+
+void    tclt_add_list_of_peers()
+{
+}
+
+char    *tclt_add_connection()
+{
+    return NULL;
+}
+
+void    tclt_add_tunnel()
+{
+}
+
+void    tclt_delete_connection()
+{
+}
+
+void    tclt_stop_tunnel()
+{
+}
+
+void    tclt_delete_peer()
+{
+}
+
+void    tclt_clear_peers()
+{
+}
+
+void    tclt_edit_peer()
+{
+}
+
+void    tclt_create_group()
+{
+}
+
+void    tclt_destroy_group()
+{
+}
+
+void    tclt_add_peer_to_group()
+{
+}
+
+void    tclt_clear_group()
+{
+}
+
+void    tclt_edit_config()
+{
+}
+
+void    tclt_add_public_key()
+{
+}
+
+void    tclt_add_key_for_peer()
+{
+}
+
+void    tclt_add_key_for_client()
+{
+}

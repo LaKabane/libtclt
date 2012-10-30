@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Florent Tribouilloy <florent.tribouilloy AT epitech DOT net>
+ * Copyright (c) 2012 Florent Tribouilloy <tribou_f AT epitech DOT net>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,62 +14,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef TCLT_JSON_H_
-# define TCLT_JSON_H_
+#ifndef TCLT_FORMAT_H_
+# define TCLT_FORMAT_H_
 
+#include <yajl/yajl_tree.h>
 #include <stddef.h>
-
-#ifdef Windows
-#include "import.h"
-#endif
 
 # ifdef __cplusplus
 extern "C" {
 # endif
-	
-struct s_string
-{
-	char* buf;
-	size_t len;
-};
 
-typedef struct s_string string;
-
-enum element_type
-{
-	E_NOTHING,
-	E_NULL_ELE,
-	E_BOOL,
-	E_INT,
-	E_DOUBLE,
-	E_NUMBER,
-	E_STRING,
-	E_MAP_KEY,
-	E_START_MAP,
-	E_END_MAP,
-	E_START_ARRAY,
-	E_END_ARRAY
-};
-
-struct s_elements
-{
-    struct s_elements* next;
-    enum element_type type;
-    union {
-        int boolean;
-        long long integer;
-        double floating;
-        char *buf;
-    } u_value;
-};
-
-typedef struct s_elements elements;
-
-#ifdef Windows
-TCLT_EXPORT elements *tclt_parse(const char*, size_t);
-#else
-elements *tclt_parse(const char*, size_t);
-#endif
+    char    *format(yajl_val node);
 
 # ifdef __cplusplus
 }
