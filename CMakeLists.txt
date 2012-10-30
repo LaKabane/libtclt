@@ -34,7 +34,7 @@ include_directories(${YAJL_INCLUDE_DIR})
 # Portable source files
 # ------------------
 set(SOURCES_LIST
-  ${CMAKE_SOURCE_DIR}/tclt_json.c
+  ${CMAKE_SOURCE_DIR}/tclt_format.c
   ${CMAKE_SOURCE_DIR}/tclt.c
 )
 
@@ -166,7 +166,7 @@ include(${CMAKE_SOURCE_DIR}/CMakeLists.txt.link.local OPTIONAL)
 
 if (UNIX)
 	install (TARGETS tclt DESTINATION lib)
-	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_json.h DESTINATION include)
+	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt.h DESTINATION include)
 endif (UNIX)
 
 if (Regress)
