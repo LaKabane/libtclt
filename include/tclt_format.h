@@ -24,7 +24,7 @@
 extern "C" {
 # endif
 
-    size_t    tclt_get_size(yajl_val node);
+    size_t    tclt_get_size(yajl_val node, int *ok);
     char    *tclt_format(yajl_val node);
 
 # ifdef __cplusplus

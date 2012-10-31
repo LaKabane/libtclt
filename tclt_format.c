@@ -21,25 +21,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-size_t    tclt_get_size(yajl_val node)
+size_t    tclt_get_size(yajl_val node, int *ok)
 {
     size_t    len = 0;
     int    i = 0;
 
+    if (node == NULL)
+    {
+        *ok = 1;
+        return len;
+    }
     if (node->type == yajl_t_string)
     {
-        len = 2;
+        len = 2; /* for '{' and '}' */
         len += strlen(node->u.string);
     }
     else if (node->type == yajl_t_object)
     {
-        len = 2;
+        len = 2; /* for '{' and '}' */
         for (i = 0; i < node->u.object.len; ++i)
         {
-            len += 3; /* the double quote of the key and the semicolon*/
+            len += 3; /* for the double quote of the key and the semicolon*/
             len += strlen(node->u.object.keys[i]);
-            len += tclt_get_size(node->u.object.values[i]);
+            len += tclt_get_size(node->u.object.values[i], ok);
         }
+    }
+    else if (node->type == yajl_t_array)
+    {
+        len = 2; /* for '[' and ']' */
+        for (i = 0; i < node->u.array.len; ++i)
+        {
+            len += tclt_get_size(node->u.array.values[i], ok);
+            if (i + 1 != node->u.array.len)
+                len += 1; /* for the ',' */
+        }
+    }
+    else
+    {
+        *ok = 1;
     }
     return len;
 }
@@ -88,15 +107,21 @@ char    *tclt_format(yajl_val node)
 {
     size_t    len = 1;
     char    *str_made = NULL;
+    int    ok = 0;
 
     if (node == NULL)
         return NULL;
-    len += tclt_get_size(node);
+    len += tclt_get_size(node, &ok);
+    if (ok == 1)
+    {
+        fprintf(stderr, "tclt_format: error in the type node\n");
+        return NULL;
+    }
     str_made = malloc(len * sizeof(*str_made));
     str_made[0] = '\0';
     if (str_made == NULL)
     {
-        fprintf(stderr, "tclt_format : not enough memory\n");
+        fprintf(stderr, "tclt_format: not enough memory\n");
         return str_made;
     }
     make_string(node, str_made, 0);
