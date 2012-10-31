@@ -19,6 +19,14 @@
 
 #include "tclt_import.h"
 
+struct t_peer
+{
+    char *name;
+    char *key;
+    char *ip;
+};
+typedef struct t_peer peer;
+
 TCLT_EXPORT void    tclt_init(void);
 TCLT_EXPORT void    tclt_destroy(void);
 TCLT_EXPORT int     tclt_get_versin(void);
@@ -26,7 +34,7 @@ TCLT_EXPORT int     tclt_get_versin(void);
 /*
 *** Peer related
  */
-TCLT_EXPORT void    tclt_add_peer();
+TCLT_EXPORT char    *tclt_add_peers(peer *peers, unsigned int nb);
 TCLT_EXPORT void    tclt_add_list_of_peers();
 TCLT_EXPORT char    *tclt_add_connection();
 TCLT_EXPORT void    tclt_add_tunnel();
@@ -55,5 +63,7 @@ TCLT_EXPORT void    tclt_add_key_for_peer();
 TCLT_EXPORT void    tclt_add_key_for_client();
 
 #define    LIB_TNETACLE_CLIENT_VERSION 2
+
+#define    ADD_PEER_CMD "AddContact"
 
 #endif

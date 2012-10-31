@@ -45,7 +45,7 @@ set (ALL_TESTS
 #  tclt_add_key_for_client
 #  tclt_add_key_for_peer
 #  tclt_add_list_of_peers
-#  tclt_add_peer
+  tclt_add_peers
 #  tclt_add_peer_to_group
 #  tclt_add_public_key
 #  tclt_add_tunnel
