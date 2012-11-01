@@ -24,19 +24,19 @@
 size_t    tclt_get_size(yajl_val node, int *ok)
 {
     size_t    len = 0;
-    int    i = 0;
+    unsigned int    i = 0;
 
     if (node == NULL)
     {
         *ok = 1;
         return len;
     }
-    if (node->type == yajl_t_string)
+    if (YAJL_IS_STRING(node))
     {
         len = 2; /* for '{' and '}' */
         len += strlen(node->u.string);
     }
-    else if (node->type == yajl_t_object)
+    else if (YAJL_IS_OBJECT(node))
     {
         len = 2; /* for '{' and '}' */
         for (i = 0; i < node->u.object.len; ++i)
@@ -46,7 +46,7 @@ size_t    tclt_get_size(yajl_val node, int *ok)
             len += tclt_get_size(node->u.object.values[i], ok);
         }
     }
-    else if (node->type == yajl_t_array)
+    else if (YAJL_IS_ARRAY(node))
     {
         len = 2; /* for '[' and ']' */
         for (i = 0; i < node->u.array.len; ++i)
@@ -65,16 +65,16 @@ size_t    tclt_get_size(yajl_val node, int *ok)
 
 void    make_string(yajl_val node, char *str, size_t len)
 {
-    int    i;
+    unsigned int    i;
 
-    if (node->type == yajl_t_string)
+    if (YAJL_IS_STRING(node))
     {
         strncat(str, "\"", 1);
         strncat(str, node->u.string, strlen(node->u.string));
         strncat(str, "\"", 1);
         len += strlen(node->u.string) + 2;
     }
-    else if (node->type == yajl_t_object)
+    else if (YAJL_IS_OBJECT(node))
     {
         strncat(str, "{", 1);
         for (i = 0; i < node->u.object.len; ++i)
@@ -89,7 +89,7 @@ void    make_string(yajl_val node, char *str, size_t len)
         strncat(str, "}", 1);
         len += 2;
     }
-    else if (node->type == yajl_t_array)
+    else if (YAJL_IS_ARRAY(node))
     {
         strncat(str, "[", 1);
         for (i = 0; i < node->u.array.len; ++i)
