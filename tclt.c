@@ -23,6 +23,7 @@
 
 #include "tclt.h"
 #include "tclt_format.h"
+#include "tclt_command.h"
 
 static void free_node(yajl_val node);
 

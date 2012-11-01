@@ -161,7 +161,8 @@ test6()
     return 0;
 }
 
-int main()
+int
+main()
 {
     if (test1() == 1)
         return 1;

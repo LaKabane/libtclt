@@ -35,6 +35,7 @@ include_directories(${YAJL_INCLUDE_DIR})
 # ------------------
 set(SOURCES_LIST
   ${CMAKE_SOURCE_DIR}/tclt_format.c
+  ${CMAKE_SOURCE_DIR}/tclt_parse.c
   ${CMAKE_SOURCE_DIR}/tclt.c
 )
 

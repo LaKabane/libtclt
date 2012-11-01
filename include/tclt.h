@@ -29,7 +29,7 @@ typedef struct t_peer peer;
 
 TCLT_EXPORT void    tclt_init(void);
 TCLT_EXPORT void    tclt_destroy(void);
-TCLT_EXPORT int     tclt_get_versin(void);
+TCLT_EXPORT int     tclt_get_version(void);
 
 /*
 *** Peer related
@@ -63,7 +63,5 @@ TCLT_EXPORT void    tclt_add_key_for_peer();
 TCLT_EXPORT void    tclt_add_key_for_client();
 
 #define    LIB_TNETACLE_CLIENT_VERSION 2
-
-#define    ADD_PEER_CMD "AddContact"
 
 #endif
