@@ -29,6 +29,15 @@
 
 
 int
+testAddContact(void *data)
+{
+    peer* p = (peer*)data;
+
+    printf("data[%s] [%s] [%s]\n", p->name, p->ip, p->key);
+    return 0;
+}
+
+int
 test1()
 {
     yajl_val node = tclt_parse(TEST_EMPTY);
@@ -74,6 +83,13 @@ test4()
     }
     return 1;
 }
+
+int
+test5()
+{    
+    return 1;
+}
+
 
 int
 main()

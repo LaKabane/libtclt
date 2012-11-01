@@ -27,6 +27,15 @@
 
 static void free_node(yajl_val node);
 
+call_command commands[] =
+    {
+        {ADD_PEER_CMD, NULL},
+        {DELETE_PEER_CMD, NULL},
+        {EDIT_PEER_CMD, NULL},
+        {ADD_LOG_CMD, NULL},
+        {NULL, NULL}
+    };
+
 void
 tclt_init(void) {
 	/* Do nothing for the moment */
@@ -40,6 +49,37 @@ tclt_destroy(void) {
 int
 tclt_get_version(void) {
 	return LIB_TNETACLE_CLIENT_VERSION;
+}
+
+int
+set_callback_command(const char *cmd, int (*f)(void*))
+{
+    unsigned int i;
+
+    for (i=0; i < sizeof(commands)/sizeof(*commands); ++i)
+    {
+        if (strcmp(commands[i].cmd_name, cmd) == 0)
+        {
+            commands[i].f = f;
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int*
+get_callback_command(const char *cmd)
+{
+    unsigned int i;
+
+    for (i=0; i < sizeof(commands)/sizeof(*commands); ++i)
+    {
+        if (strcmp(commands[i].cmd_name, cmd) == 0)
+        {
+            return (commands[i].f);
+        }
+    }
+    return NULL;
 }
 
 static void

@@ -14,43 +14,51 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef TCLT_COMMAND_H_
-# define TCLT_COMMAND_H_
+#include "tclt.h"
+#include "tclt_command.h"
 
-#include <stddef.h>
+#include <stdio.h>
 
-# ifdef __cplusplus
-extern "C" {
-# endif
-
-#define    NB_CMD   4
-#define    ADD_PEER_CMD "AddContact"
-#define    DELETE_PEER_CMD "DeleteContact"
-#define    EDIT_PEER_CMD "EditContact"
-
-#define    ADD_LOG_CMD "AddLog"
-
-struct t_call_command
+int
+test1()
 {
-    const char    *cmd_name;
-    int           (*f)(void *);
-};
-typedef struct t_call_command call_command;
-
-# ifdef __cplusplus
+    if (get_callback_command(ADD_PEER_CMD) == NULL)
+        return 0;
+    return 1;
 }
-# endif
 
-#endif
+int
+test_func0(void *f)
+{
+    return 0;
+}
 
+int
+test_func1(void *f)
+{
+    return 0;
+}
 
+int
+test2()
+{
+    int  (*f)(void*);
+    set_callback_command(ADD_PEER_CMD, &test_func0);
+    set_callback_command(DELETE_PEER_CMD, &test_func1);
+    f = get_callback_command(ADD_PEER_CMD);
+    if (f == NULL || f(NULL) != 0)
+        return 1;
+    f = get_callback_command(DELETE_PEER_CMD);
+    if (f == NULL || f(NULL) != 1)
+        return 1;
+    return 0;
+}
 
-
-
-
-
-
-
-
-
-
+int
+main()
+{
+    if (test1() == 1)
+        return 1;
+    printf("test1 passed\n");
+    return 0;
+}
