@@ -44,6 +44,8 @@ size_t    tclt_get_size(yajl_val node, int *ok)
             len += 3; /* for the double quote of the key and the semicolon*/
             len += strlen(node->u.object.keys[i]);
             len += tclt_get_size(node->u.object.values[i], ok);
+            if (i + 1 != node->u.object.len)
+                len += 1; /* for the ',' */
         }
     }
     else if (YAJL_IS_ARRAY(node))
@@ -63,7 +65,7 @@ size_t    tclt_get_size(yajl_val node, int *ok)
     return len;
 }
 
-void    make_string(yajl_val node, char *str, size_t len)
+void    make_string(yajl_val node, char *str)
 {
     unsigned int    i;
 
@@ -72,7 +74,6 @@ void    make_string(yajl_val node, char *str, size_t len)
         strncat(str, "\"", 1);
         strncat(str, node->u.string, strlen(node->u.string));
         strncat(str, "\"", 1);
-        len += strlen(node->u.string) + 2;
     }
     else if (YAJL_IS_OBJECT(node))
     {
@@ -82,24 +83,22 @@ void    make_string(yajl_val node, char *str, size_t len)
             strncat(str, "\"", 1);
             strncat(str, node->u.object.keys[i], strlen(node->u.object.keys[i]));
             strncat(str, "\":", 2);
-            make_string(node->u.object.values[i], str, len);
+            make_string(node->u.object.values[i], str);
             if (i + 1 != node->u.object.len)
                 strncat(str, ",", 1);
         }
         strncat(str, "}", 1);
-        len += 2;
     }
     else if (YAJL_IS_ARRAY(node))
     {
         strncat(str, "[", 1);
         for (i = 0; i < node->u.array.len; ++i)
         {
-            make_string(node->u.array.values[i], str, len);
+            make_string(node->u.array.values[i], str);
             if (i + 1 != node->u.array.len)
                 strncat(str, ",", 1);
         }
         strncat(str, "]", 1);
-        len += 2;
     }
 }
 
@@ -124,6 +123,6 @@ char    *tclt_format(yajl_val node)
         fprintf(stderr, "tclt_format: not enough memory\n");
         return str_made;
     }
-    make_string(node, str_made, 0);
+    make_string(node, str_made);
     return str_made;
 }

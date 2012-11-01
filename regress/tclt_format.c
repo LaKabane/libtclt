@@ -18,6 +18,7 @@
 #include "tclt_format.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define TEST_KEY    "key"
 #define TEST_VALUE    "value"
@@ -45,7 +46,6 @@ static int test2()
 {
     yajl_val    node_key;
     yajl_val    node_string;
-    char    *res;
     const char    *key = TEST_KEY;
     int    ok = 0;
 
@@ -107,8 +107,11 @@ static int test3()
         fprintf(stderr, "Test3 failed : %s\n", res);
         free(node_key);
         free(node_string);
+        if (res == NULL)
+            free(res);
         return 1;
     }
+    free(res);
     free(node_key);
     free(node_string);
     return 0;
@@ -119,7 +122,6 @@ static int test4()
     yajl_val    node_key;
     yajl_val    node_string;
     char    *res;
-    const char    *key = TEST_KEY;
 
     node_key = malloc(sizeof(*node_key));
     node_string = malloc(sizeof(*node_string));
@@ -140,10 +142,13 @@ static int test4()
     if (res == NULL || strcmp(res, TEST_RES_ARRAY) != 0)
     {
         fprintf(stderr, "Test4 failed : %s\n", res);
+        if (res == NULL)
+            free(res);
         free(node_key);
         free(node_string);
         return 1;
     }
+    free(res);
     free(node_key);
     free(node_string);
     return 0;
@@ -198,10 +203,21 @@ static int test5()
         fprintf(stderr, "Test4 failed : %s\n", res);
         free(node_key);
         free(node_string);
+        free(node_key2);
+        free(node_string2);
+        free(node_array->u.array.values);
+        free(node_array);
+        if (res == NULL)
+            free(res);
         return 1;
     }
+    free(res);
     free(node_key);
     free(node_string);
+    free(node_key2);
+    free(node_string2);
+    free(node_array->u.array.values);
+    free(node_array);
     return 0;
 }
 

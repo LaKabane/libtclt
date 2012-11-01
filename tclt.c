@@ -24,6 +24,8 @@
 #include "tclt.h"
 #include "tclt_format.h"
 
+static void free_node(yajl_val node);
+
 void
 tclt_init(void) {
 	/* Do nothing for the moment */
@@ -40,9 +42,50 @@ tclt_get_version(void) {
 }
 
 static void
+free_array(yajl_val node)
+{
+    unsigned int i;
+
+    for (i=0; i < node->u.array.len; ++i)
+    {
+        free_node(node->u.array.values[i]);
+    }
+    free(node->u.array.values);
+    free(node);
+}
+
+static void
+free_object(yajl_val node)
+{
+    unsigned int i;
+
+    for (i=0; i < node->u.object.len; ++i)
+    {
+        free_node(node->u.object.values[i]);
+    }
+    free(node->u.object.values);
+    free(node->u.object.keys);
+    free(node);
+}
+
+static void
+free_string(yajl_val node)
+{
+    free(node->u.string);
+    free(node);
+}
+
+static void
 free_node(yajl_val node)
 {
-    free(node);
+    if (YAJL_IS_ARRAY(node))
+        free_array(node);
+    else if (YAJL_IS_OBJECT(node))
+        free_object(node);
+    else if (YAJL_IS_STRING(node))
+        free_string(node);
+    else
+        free(node);
 }
 
 static yajl_val
@@ -70,6 +113,60 @@ tclt_make_string_node(const char* val)
 }
 
 static yajl_val
+tclt_make_object_node(unsigned int len)
+{
+    yajl_val node = NULL;
+
+    node = malloc(sizeof(*node));
+    if (node == NULL)
+    {
+        fprintf(stderr, "tclt_make_object_node: out of memory\n");
+        return NULL;
+    }
+    node->type = yajl_t_object;
+    node->u.object.len = len;
+    node->u.object.keys = malloc(sizeof(*node->u.object.keys) * len);
+    if (node->u.object.keys == NULL)
+    {
+        free(node);
+        fprintf(stderr, "tclt_make_object_node: out of memory\n");
+        return NULL;
+    }
+    node->u.object.values = malloc(sizeof(*node->u.object.values) * len);
+    if (node->u.object.values == NULL)
+    {
+        free(node);
+        free(node->u.object.keys);
+        fprintf(stderr, "tclt_make_object_node: out of memory\n");
+        return NULL;
+    }
+    return (node);
+}
+
+static yajl_val
+tclt_make_array_node(unsigned int len)
+{
+    yajl_val node = NULL;
+
+    node = malloc(sizeof(*node));
+    if (node == NULL)
+    {
+        fprintf(stderr, "tclt_make_array_node: out of memory\n");
+        return NULL;
+    }
+    node->type = yajl_t_array;
+    node->u.array.len = len;
+    node->u.array.values = malloc(sizeof(*node->u.array.values) * len);
+    if (node->u.array.values == NULL)
+    {
+        free(node);
+        fprintf(stderr, "tclt_make_array_node: out of memory\n");
+        return NULL;
+    }
+    return (node);
+}
+
+static yajl_val
 tclt_make_node_peer(peer *peer)
 {
     yajl_val node = NULL;
@@ -77,30 +174,8 @@ tclt_make_node_peer(peer *peer)
     yajl_val name;
     yajl_val key;
 
-    node = malloc(sizeof(*node));
-    if (node == NULL)
-    {
-        fprintf(stderr, "tclt_make_node_peer: out of memory\n");
+    if ((node = tclt_make_object_node(3)) == NULL)
         return NULL;
-    }
-    node->type = yajl_t_object;
-    node->u.object.len = 3;
-    node->u.object.keys = malloc(sizeof(*node->u.object.keys) * 3);
-    if (node->u.object.keys == NULL)
-    {
-        free(node);
-        fprintf(stderr, "tclt_make_node_peer: out of memory\n");
-        return NULL;
-    }
-
-    node->u.object.values = malloc(sizeof(*node->u.object.values) * 3);
-    if (node->u.object.values == NULL)
-    {
-        free(node);
-        free(node->u.object.keys);
-        fprintf(stderr, "tclt_make_node_peer: out of memory\n");
-        return NULL;
-    }
 
     name = tclt_make_string_node(peer->name);
     ip = tclt_make_string_node(peer->ip);
@@ -112,6 +187,7 @@ tclt_make_node_peer(peer *peer)
         free(node->u.object.values);
         return NULL;
     }
+    /* TODO : verify the strdup */
     node->u.object.keys[0] = "Name";
     node->u.object.values[0] = name;
 
@@ -131,49 +207,19 @@ tclt_add_peers(peer *peers, unsigned int nb)
     yajl_val tmp_node = NULL;
     unsigned int i;
     char    *format = NULL;
-    char    *tmp_key = NULL;
+    char    *tmp_key = ADD_PEER_CMD;
 
     if (nb == 0)
         return NULL;
-    node = malloc(sizeof(*node));
-    if (node == NULL)
-    {
-        fprintf(stderr, "tclt_add_peers: out of memory\n");
+    if ((node = tclt_make_array_node(nb)) == NULL)
         return NULL;
-    }
-    node->type = yajl_t_array;
-    node->u.array.len = nb;
-    node->u.array.values = malloc(sizeof(*node->u.array.values) * nb);
-    if (node->u.array.values == NULL)
-    {
-        fprintf(stderr, "tclt_add_peers: out of memory\n");
-        return NULL;
-    }
     for (i=0; i < nb; ++i)
     {
-        tmp_node = malloc(sizeof(*tmp_node));
-        if (tmp_node == NULL)
-        {
-            fprintf(stderr, "tclt_add_peers: out of memory\n");
+        if ((tmp_node = tclt_make_object_node(1)) == NULL)
             return NULL;
-        }
-        tmp_node->type = yajl_t_object;
-        tmp_key = strdup(ADD_PEER_CMD);
-        if (tmp_key == NULL)
-        {
-            fprintf(stderr, "tclt_add_peers: out of memory\n");
-            return NULL;
-        }
-        tmp_node->u.object.len = 1;
-        tmp_node->u.object.keys = &tmp_key;
-        yajl_val *tmp = malloc(sizeof(*tmp));
-        if (tmp == NULL)
-        {
-            fprintf(stderr, "tclt_add_peers: out of memory\n");
-            return NULL;
-        }
-        tmp[0] = tclt_make_node_peer(&peers[i]);
-        tmp_node->u.object.values = tmp;
+
+        tmp_node->u.object.keys[0] = tmp_key;
+        tmp_node->u.object.values[0] = tclt_make_node_peer(&peers[i]);
         node->u.array.values[i] = tmp_node;
     }
     format = tclt_format(node);

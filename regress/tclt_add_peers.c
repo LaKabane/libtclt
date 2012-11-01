@@ -18,6 +18,8 @@
 #include "tclt_format.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <yajl/yajl_tree.h>
 
 #define CONTACT1_NAME "contact1"
@@ -59,8 +61,11 @@ test2()
     if (res == NULL || strcmp(res, RES_SIMPLE) != 0)
     {
         fprintf(stderr, "res=[%s]\n", res);
+        if (res != NULL)
+            free(res);
         return 1;
     }
+    free(res);
     return 0;
 }
 
@@ -84,9 +89,12 @@ test3()
     res = tclt_add_peers(&p[0], 3);
     if (res == NULL || strcmp(res, RES_TRIPLE) != 0)
     {
+        if (res != NULL)
+            free(res);
         fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
+    free(res);
     return 0;
 }
 
@@ -101,10 +109,13 @@ test4()
     p.ip = CONTACT1_IP;
     res = tclt_add_peers(&p, 1);
     if (res == NULL || strcmp(res, RES_SIMPLE_WT_KEY) != 0)
-    {
+        {
+        if (res != NULL)
+            free(res);
         fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
+    free(res);
     return 0;
 }
 
@@ -120,9 +131,12 @@ test5()
     res = tclt_add_peers(&p, 1);
     if (res == NULL || strcmp(res, RES_SIMPLE_WT_IP) != 0)
     {
+        if (res != NULL)
+            free(res);
         fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
+    free(res);
     return 0;
 }
 
@@ -138,9 +152,12 @@ test6()
     res = tclt_add_peers(&p, 1);
     if (res == NULL || strcmp(res, RES_SIMPLE_WT_NAME) != 0)
     {
+        if (res != NULL)
+            free(res);
         fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
+    free(res);
     return 0;
 }
 
@@ -148,15 +165,21 @@ int main()
 {
     if (test1() == 1)
         return 1;
+    printf("test1 passed\n");
     if (test2() == 1)
         return 1;
+    printf("test2 passed\n");
     if (test3() == 1)
         return 1;
+    printf("test3 passed\n");
     if (test4() == 1)
         return 1;
+    printf("test4 passed\n");
     if (test5() == 1)
         return 1;
+    printf("test5 passed\n");
     if (test6() == 1)
         return 1;
+    printf("test6 passed\n");
     return 0;
 }
