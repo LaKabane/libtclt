@@ -41,6 +41,7 @@ set (ALL_TESTS
   tclt_init
   tclt_destroy
   tclt_format
+  tclt_parse
 #  tclt_add_connection
 #  tclt_add_key_for_client
 #  tclt_add_key_for_peer
