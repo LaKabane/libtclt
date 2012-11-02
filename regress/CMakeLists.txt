@@ -55,7 +55,7 @@ set (ALL_TESTS
 #  tclt_clear_peers
 #  tclt_create_group
 #  tclt_delete_connection
-#  tclt_delete_peer
+  tclt_delete_peer
 #  tclt_destroy
 #  tclt_destroy_group
 #  tclt_edit_config

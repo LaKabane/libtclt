@@ -288,8 +288,23 @@ void    tclt_stop_tunnel()
 {
 }
 
-void    tclt_delete_peer()
+char*
+tclt_delete_peer(const char *peer)
 {
+    char *res = NULL;
+    const char *tmp_key = DELETE_PEER_CMD;
+    yajl_val node;
+
+    if (peer == NULL)
+        return NULL;
+    if ((node = tclt_make_object_node(1)) == NULL)
+        return NULL;
+
+    node->u.object.keys[0] = tmp_key;
+    node->u.object.values[0] = tclt_make_string_node(peer);
+    res = tclt_format(node);
+    free_node(node);
+    return res;
 }
 
 void    tclt_clear_peers()

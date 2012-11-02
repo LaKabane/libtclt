@@ -43,7 +43,7 @@ TCLT_EXPORT void    tclt_add_tunnel();
 
 TCLT_EXPORT void    tclt_delete_connection();
 TCLT_EXPORT void    tclt_stop_tunnel();
-TCLT_EXPORT void    tclt_delete_peer();
+TCLT_EXPORT char    *tclt_delete_peer(const char *);
 TCLT_EXPORT void    tclt_clear_peers();
 
 TCLT_EXPORT void    tclt_edit_peer();
