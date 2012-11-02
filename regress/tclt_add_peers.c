@@ -16,6 +16,8 @@
 
 #include "tclt.h"
 #include "tclt_format.h"
+#include "tclt_command.h"
+#include "tclt_parse.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -162,6 +164,43 @@ test6()
 }
 
 int
+test_valid_string_parser(void *f)
+{
+    peer *p = (peer*)f;
+
+    if (p == NULL || strcmp(p->name, CONTACT1_NAME) != 0 || strcmp(p->ip, CONTACT1_IP) != 0 || strcmp(p->key, CONTACT1_KEY) != 0)
+        return 1;
+    return 0;
+}
+
+/* 
+ * try if the code product is understandable by the parser
+ */
+int
+test7()
+{
+    peer p;
+    char *res = NULL;
+
+    p.name = CONTACT1_NAME;
+    p.key = CONTACT1_KEY;
+    p.ip = CONTACT1_IP;
+    res = tclt_add_peers(&p, 1);
+    if (res == NULL || strcmp(res, RES_SIMPLE) != 0)
+    {
+        if (res != NULL)
+            free(res);
+        fprintf(stderr, "res=[%s]\n", res);
+        return 1;
+    }
+    set_callback_command(ADD_PEER_CMD, &test_valid_string_parser);
+    if (tclt_dispatch_command(res) != 0)
+        return 1;
+    free(res);
+    return 0;
+}
+
+int
 main()
 {
     if (test1() == 1)
@@ -182,5 +221,8 @@ main()
     if (test6() == 1)
         return 1;
     printf("test6 passed\n");
+    if (test7() == 1)
+        return 1;
+    printf("test7 passed\n");
     return 0;
 }
