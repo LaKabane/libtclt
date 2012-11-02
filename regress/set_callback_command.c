@@ -19,10 +19,15 @@
 #include "tclt_parse.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #define TEST_CMD1  "{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}"
 #define TEST_CMD2  "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}]"
 #define TEST_CMD3  "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}},{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}]"
+
+#define TEST_CMD1_NAME "contact1"
+#define TEST_CMD1_IP "10.0.0.1"
+#define TEST_CMD1_KEY "key1"
 
 
 int
@@ -45,6 +50,21 @@ test_func1(void *f)
 {
     (void)f;
     return 1;
+}
+
+int
+test_peer_func(void *f)
+{
+    peer *p = (peer*)f;
+    if (p == NULL)
+        return 1;
+    if (strcmp(p->name, TEST_CMD1_NAME) != 0)
+        return 1;
+    if (strcmp(p->key, TEST_CMD1_KEY) != 0)
+        return 1;
+    if (strcmp(p->ip, TEST_CMD1_IP) != 0)
+        return 1;
+    return 0;
 }
 
 int
@@ -108,6 +128,15 @@ test7()
 }
 
 int
+test8()
+{
+    set_callback_command(ADD_PEER_CMD, &test_peer_func);
+    if (tclt_dispatch_command(TEST_CMD1) != 0)
+        return 1;
+    return 0;
+}
+
+int
 main()
 {
     if (test1() == 1)
@@ -131,5 +160,8 @@ main()
     if (test7() == 1)
         return 1;
     printf("test7 passed\n");
+    if (test8() == 1)
+        return 1;
+    printf("test8 passed\n");
     return 0;
 }

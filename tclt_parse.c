@@ -24,10 +24,11 @@
 #include <stdlib.h>
 
 static int no_arg_dispatch(void *ptr);
+static int peer_arg_dispatch(void *ptr);
 
 static call_command dispatch_cmd [] =
     {
-        {ADD_PEER_CMD, no_arg_dispatch},
+        {ADD_PEER_CMD, peer_arg_dispatch},
         {DELETE_PEER_CMD, no_arg_dispatch},
         {EDIT_PEER_CMD, no_arg_dispatch},
         {ADD_LOG_CMD, no_arg_dispatch}
@@ -66,6 +67,70 @@ no_arg_dispatch(void *ptr)
         return 1;
     }
     return (f(NULL));
+}
+
+static int
+tclt_get_peer_from_object_node(yajl_val node, peer *p)
+{
+    unsigned int  i;
+    if (!YAJL_IS_OBJECT(node))
+    {
+        return 1;
+    }
+    for (i=0; i < YAJL_GET_OBJECT(node)->len; ++i)
+    {
+        if (strcmp(YAJL_GET_OBJECT(node)->keys[i], TCLT_NAME) == 0)
+        {
+            if (YAJL_IS_STRING(YAJL_GET_OBJECT(node)->values[i]))
+            {
+                char *tmp = YAJL_GET_STRING(YAJL_GET_OBJECT(node)->values[i]);
+                p->name = strdup(tmp);
+            }
+        }
+        else if (strcmp(YAJL_GET_OBJECT(node)->keys[i], TCLT_IP) == 0)
+        {
+            if (YAJL_IS_STRING(YAJL_GET_OBJECT(node)->values[i]))
+            {
+                char * tmp = YAJL_GET_STRING(YAJL_GET_OBJECT(node)->values[i]);
+                p->ip = strdup(tmp);
+            }
+        }
+        else if (strcmp(YAJL_GET_OBJECT(node)->keys[i], TCLT_KEY) == 0)
+        {
+            if (YAJL_IS_STRING(YAJL_GET_OBJECT(node)->values[i]))
+            {
+                char * tmp = YAJL_GET_STRING(YAJL_GET_OBJECT(node)->values[i]);
+                p->key = strdup(tmp);
+            }
+        }
+        else
+            return 1;
+    }
+    return 0;
+}
+
+static int
+peer_arg_dispatch(void *ptr)
+{
+    fun_args *args = ptr;
+    yajl_val node;
+    int  (*f)(void*);
+    peer    p;
+    int     res = 0;
+
+    node = args->node;
+    if (node == NULL)
+        return 1;
+    f = get_callback_command(args->name);
+    if (f == NULL)
+    {
+        fprintf(stderr, "Command not found : %s\n", args->name);
+        return 1;
+    }
+    res = tclt_get_peer_from_object_node(node, &p);
+    if (res == 1)
+        return 1;
+    return (f(&p));
 }
 
 int

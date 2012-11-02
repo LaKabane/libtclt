@@ -37,7 +37,10 @@ struct t_fun_args
     yajl_val   tclt_parse(const char *str);
     TCLT_EXPORT int    tclt_dispatch_command(const char *str);
 
-    #define BUFF_LEN 4096
+#define BUFF_LEN 4096
+#define TCLT_KEY   "Key"
+#define TCLT_IP   "Ip"
+#define TCLT_NAME   "Name"
 
 # ifdef __cplusplus
 }
