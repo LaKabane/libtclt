@@ -25,11 +25,12 @@
 
 static int no_arg_dispatch(void *ptr);
 static int peer_arg_dispatch(void *ptr);
+static int peer_name_arg_dispatch(void *ptr);
 
 static call_command dispatch_cmd [] =
     {
         {ADD_PEER_CMD, peer_arg_dispatch},
-        {DELETE_PEER_CMD, no_arg_dispatch},
+        {DELETE_PEER_CMD, peer_name_arg_dispatch},
         {EDIT_PEER_CMD, no_arg_dispatch},
         {ADD_LOG_CMD, no_arg_dispatch}
     };
@@ -111,6 +112,24 @@ tclt_get_peer_from_object_node(yajl_val node, peer *p)
 }
 
 static int
+tclt_get_string_from_string_node(yajl_val node, char **p)
+{
+    char *tmp = NULL;
+
+    if (!YAJL_IS_STRING(node))
+    {
+        return 1;
+    }
+    tmp = YAJL_GET_STRING(node);
+    if ((*p = strdup(tmp)) == NULL)
+    {
+        fprintf(stderr, "tclt_get_string_from_string_node: Out of memory\n");
+        return 1;
+    }
+    return 0;
+}
+
+static int
 peer_arg_dispatch(void *ptr)
 {
     fun_args *args = ptr;
@@ -132,6 +151,29 @@ peer_arg_dispatch(void *ptr)
     if (res == 1)
         return 1;
     return (f(&p));
+}
+
+static int
+peer_name_arg_dispatch(void *ptr)
+{
+    fun_args *args = ptr;
+    yajl_val node = args->node;
+    int  (*f)(void*);
+    char*    p;
+    int      res = 0;
+
+    if (node == NULL)
+        return 1;
+    f = get_callback_command(args->name);
+    if (f == NULL)
+    {
+        fprintf(stderr, "Command not found : %s\n", args->name);
+        return 1;
+    }
+    res = tclt_get_string_from_string_node(node, &p);
+    if (res == 1)
+        return 1;
+    return (f(p));
 }
 
 int
