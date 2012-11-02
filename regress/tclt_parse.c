@@ -85,13 +85,6 @@ test4()
 }
 
 int
-test5()
-{    
-    return 1;
-}
-
-
-int
 main()
 {
     if (test1() == 1)

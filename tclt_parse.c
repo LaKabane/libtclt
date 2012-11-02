@@ -34,7 +34,8 @@ static call_command dispatch_cmd [] =
         {ADD_LOG_CMD, no_arg_dispatch}
     };
 
-yajl_val   tclt_parse(const char *str)
+yajl_val
+tclt_parse(const char *str)
 {
     yajl_val node;
     char    errbuf[BUFF_LEN];
