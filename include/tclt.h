@@ -31,7 +31,7 @@ TCLT_EXPORT void    tclt_init(void);
 TCLT_EXPORT void    tclt_destroy(void);
 TCLT_EXPORT int     tclt_get_version(void);
 TCLT_EXPORT int     set_callback_command(const char *cmd, int (*f)(void*));
-int*    get_callback_command(const char *cmd);
+TCLT_EXPORT void*    get_callback_command(const char *cmd);
 
 /*
 *** Peer related

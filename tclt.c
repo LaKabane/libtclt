@@ -32,8 +32,7 @@ call_command commands[] =
         {ADD_PEER_CMD, NULL},
         {DELETE_PEER_CMD, NULL},
         {EDIT_PEER_CMD, NULL},
-        {ADD_LOG_CMD, NULL},
-        {NULL, NULL}
+        {ADD_LOG_CMD, NULL}
     };
 
 void
@@ -67,7 +66,7 @@ set_callback_command(const char *cmd, int (*f)(void*))
     return 1;
 }
 
-int*
+void*
 get_callback_command(const char *cmd)
 {
     unsigned int i;

@@ -21,12 +21,21 @@
 #include <stddef.h>
 
 #include "tclt.h"
+#include "tclt_import.h"
 
 # ifdef __cplusplus
 extern "C" {
 # endif
 
+struct t_fun_args
+{
+    yajl_val node;
+    const char *name;
+};
+    typedef struct t_fun_args fun_args;
+
     yajl_val   tclt_parse(const char *str);
+    TCLT_EXPORT int    tclt_dispatch_command(const char *str);
 
     #define BUFF_LEN 4096
 
@@ -35,3 +44,12 @@ extern "C" {
 # endif
 
 #endif
+
+
+
+
+
+
+
+
+

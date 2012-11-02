@@ -16,8 +16,14 @@
 
 #include "tclt.h"
 #include "tclt_command.h"
+#include "tclt_parse.h"
 
 #include <stdio.h>
+
+#define TEST_CMD1  "{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}"
+#define TEST_CMD2  "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}]"
+#define TEST_CMD3  "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}},{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}]"
+
 
 int
 test1()
@@ -30,13 +36,15 @@ test1()
 int
 test_func0(void *f)
 {
+    (void)f;
     return 0;
 }
 
 int
 test_func1(void *f)
 {
-    return 0;
+    (void)f;
+    return 1;
 }
 
 int
@@ -45,11 +53,56 @@ test2()
     int  (*f)(void*);
     set_callback_command(ADD_PEER_CMD, &test_func0);
     set_callback_command(DELETE_PEER_CMD, &test_func1);
-    f = get_callback_command(ADD_PEER_CMD);
+    f = (int(*)(void*))get_callback_command(ADD_PEER_CMD);
     if (f == NULL || f(NULL) != 0)
         return 1;
-    f = get_callback_command(DELETE_PEER_CMD);
+    f = (int(*)(void*))get_callback_command(DELETE_PEER_CMD);
     if (f == NULL || f(NULL) != 1)
+        return 1;
+    return 0;
+}
+
+int
+test3()
+{
+    set_callback_command(ADD_PEER_CMD, &test_func1);
+    if (tclt_dispatch_command(TEST_CMD1) != 1)
+        return 1;
+    return 0;
+}
+
+int
+test4()
+{
+    set_callback_command(ADD_PEER_CMD, &test_func0);
+    if (tclt_dispatch_command(TEST_CMD1) != 0)
+        return 1;
+    return 0;
+}
+
+int
+test5()
+{
+    set_callback_command(ADD_PEER_CMD, NULL);
+    if (tclt_dispatch_command(TEST_CMD1) != 1)
+        return 1;
+    return 0;
+}
+
+int
+test6()
+{
+    set_callback_command(ADD_PEER_CMD, &test_func0);
+    if (tclt_dispatch_command(TEST_CMD2) != 0)
+        return 1;
+    return 0;
+}
+
+int
+test7()
+{
+    set_callback_command(ADD_PEER_CMD, &test_func0);
+    if (tclt_dispatch_command(TEST_CMD3) != 0)
         return 1;
     return 0;
 }
@@ -60,5 +113,23 @@ main()
     if (test1() == 1)
         return 1;
     printf("test1 passed\n");
+    if (test2() == 1)
+        return 1;
+    printf("test2 passed\n");
+    if (test3() == 1)
+        return 1;
+    printf("test3 passed\n");
+    if (test4() == 1)
+        return 1;
+    printf("test4 passed\n");
+    if (test5() == 1)
+        return 1;
+    printf("test5 passed\n");
+    if (test6() == 1)
+        return 1;
+    printf("test6 passed\n");
+    if (test7() == 1)
+        return 1;
+    printf("test7 passed\n");
     return 0;
 }
