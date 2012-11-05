@@ -63,6 +63,7 @@ set (ALL_TESTS
 #  tclt_get_versin
 #  tclt_init
 #  tclt_stop_tunnel
+  tclt_add_log
 )
 
 foreach(REGRESS_NAME ${ALL_TESTS})

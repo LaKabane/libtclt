@@ -51,7 +51,7 @@ tclt_get_version(void) {
 }
 
 int
-set_callback_command(const char *cmd, int (*f)(void*))
+tclt_set_callback_command(const char *cmd, int (*f)(void*))
 {
     unsigned int i;
 
@@ -67,7 +67,7 @@ set_callback_command(const char *cmd, int (*f)(void*))
 }
 
 void*
-get_callback_command(const char *cmd)
+tclt_get_callback_command(const char *cmd)
 {
     unsigned int i;
 
@@ -247,7 +247,6 @@ tclt_add_peers(peer *peers, unsigned int nb)
     yajl_val tmp_node = NULL;
     unsigned int i;
     char    *format = NULL;
-    char    *tmp_key = ADD_PEER_CMD;
 
     if (nb == 0)
         return NULL;
@@ -258,7 +257,7 @@ tclt_add_peers(peer *peers, unsigned int nb)
         if ((tmp_node = tclt_make_object_node(1)) == NULL)
             return NULL;
 
-        tmp_node->u.object.keys[0] = tmp_key;
+        tmp_node->u.object.keys[0] = ADD_PEER_CMD;
         tmp_node->u.object.values[0] = tclt_make_node_peer(&peers[i]);
         node->u.array.values[i] = tmp_node;
     }
@@ -292,7 +291,6 @@ char*
 tclt_delete_peer(const char *peer)
 {
     char *res = NULL;
-    const char *tmp_key = DELETE_PEER_CMD;
     yajl_val node;
 
     if (peer == NULL)
@@ -300,7 +298,7 @@ tclt_delete_peer(const char *peer)
     if ((node = tclt_make_object_node(1)) == NULL)
         return NULL;
 
-    node->u.object.keys[0] = tmp_key;
+    node->u.object.keys[0] = DELETE_PEER_CMD;
     node->u.object.values[0] = tclt_make_string_node(peer);
     res = tclt_format(node);
     free_node(node);
@@ -345,4 +343,25 @@ void    tclt_add_key_for_peer()
 
 void    tclt_add_key_for_client()
 {
+}
+
+char*
+tclt_add_log(const char *log)
+{
+    yajl_val    node = NULL;
+    yajl_val tmp_node = NULL;
+    char    *format = NULL;
+
+    if (log == NULL)
+        return NULL;
+    if ((node = tclt_make_object_node(1)) == NULL)
+        return NULL;
+    if ((tmp_node = tclt_make_string_node(log)) == NULL)
+        return NULL;
+
+    node->u.object.keys[0] = ADD_LOG_CMD;
+    node->u.object.values[0] = tmp_node;
+    format = tclt_format(node);
+    free_node(node);
+    return format;
 }

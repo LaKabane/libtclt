@@ -19,6 +19,10 @@
 
 #include "tclt_import.h"
 
+# ifdef __cplusplus
+extern "C" {
+# endif
+
 struct t_peer
 {
     char *name;
@@ -30,8 +34,8 @@ typedef struct t_peer peer;
 TCLT_EXPORT void    tclt_init(void);
 TCLT_EXPORT void    tclt_destroy(void);
 TCLT_EXPORT int     tclt_get_version(void);
-TCLT_EXPORT int     set_callback_command(const char *cmd, int (*f)(void*));
-TCLT_EXPORT void*    get_callback_command(const char *cmd);
+TCLT_EXPORT int     tclt_set_callback_command(const char *cmd, int (*f)(void*));
+TCLT_EXPORT void*    tclt_get_callback_command(const char *cmd);
 
 /*
 *** Peer related
@@ -63,7 +67,12 @@ TCLT_EXPORT void    tclt_edit_config();
 TCLT_EXPORT void    tclt_add_public_key();
 TCLT_EXPORT void    tclt_add_key_for_peer();
 TCLT_EXPORT void    tclt_add_key_for_client();
+TCLT_EXPORT char    *tclt_add_log(const char *log);
 
 #define    LIB_TNETACLE_CLIENT_VERSION 2
+
+# ifdef __cplusplus
+}
+# endif
 
 #endif
