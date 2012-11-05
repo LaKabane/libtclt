@@ -33,7 +33,7 @@
 int
 test1()
 {
-    if (get_callback_command(ADD_PEER_CMD) == NULL)
+    if (tclt_get_callback_command(ADD_PEER_CMD) == NULL)
         return 0;
     return 1;
 }
@@ -71,12 +71,12 @@ int
 test2()
 {
     int  (*f)(void*);
-    set_callback_command(ADD_PEER_CMD, &test_func0);
-    set_callback_command(DELETE_PEER_CMD, &test_func1);
-    f = (int(*)(void*))get_callback_command(ADD_PEER_CMD);
+    tclt_set_callback_command(ADD_PEER_CMD, &test_func0);
+    tclt_set_callback_command(DELETE_PEER_CMD, &test_func1);
+    f = (int(*)(void*))tclt_get_callback_command(ADD_PEER_CMD);
     if (f == NULL || f(NULL) != 0)
         return 1;
-    f = (int(*)(void*))get_callback_command(DELETE_PEER_CMD);
+    f = (int(*)(void*))tclt_get_callback_command(DELETE_PEER_CMD);
     if (f == NULL || f(NULL) != 1)
         return 1;
     return 0;
@@ -85,7 +85,7 @@ test2()
 int
 test3()
 {
-    set_callback_command(ADD_PEER_CMD, &test_func1);
+    tclt_set_callback_command(ADD_PEER_CMD, &test_func1);
     if (tclt_dispatch_command(TEST_CMD1) != 1)
         return 1;
     return 0;
@@ -94,7 +94,7 @@ test3()
 int
 test4()
 {
-    set_callback_command(ADD_PEER_CMD, &test_func0);
+    tclt_set_callback_command(ADD_PEER_CMD, &test_func0);
     if (tclt_dispatch_command(TEST_CMD1) != 0)
         return 1;
     return 0;
@@ -103,7 +103,7 @@ test4()
 int
 test5()
 {
-    set_callback_command(ADD_PEER_CMD, NULL);
+    tclt_set_callback_command(ADD_PEER_CMD, NULL);
     if (tclt_dispatch_command(TEST_CMD1) != 1)
         return 1;
     return 0;
@@ -112,7 +112,7 @@ test5()
 int
 test6()
 {
-    set_callback_command(ADD_PEER_CMD, &test_func0);
+    tclt_set_callback_command(ADD_PEER_CMD, &test_func0);
     if (tclt_dispatch_command(TEST_CMD2) != 0)
         return 1;
     return 0;
@@ -121,7 +121,7 @@ test6()
 int
 test7()
 {
-    set_callback_command(ADD_PEER_CMD, &test_func0);
+    tclt_set_callback_command(ADD_PEER_CMD, &test_func0);
     if (tclt_dispatch_command(TEST_CMD3) != 0)
         return 1;
     return 0;
@@ -130,7 +130,7 @@ test7()
 int
 test8()
 {
-    set_callback_command(ADD_PEER_CMD, &test_peer_func);
+    tclt_set_callback_command(ADD_PEER_CMD, &test_peer_func);
     if (tclt_dispatch_command(TEST_CMD1) != 0)
         return 1;
     return 0;

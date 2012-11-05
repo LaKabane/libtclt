@@ -78,7 +78,7 @@ test4()
     if (YAJL_GET_ARRAY(node) != NULL && YAJL_GET_ARRAY(node)->len == 1 && YAJL_IS_STRING(YAJL_GET_ARRAY(node)->values[0]))
     {
         char *str = YAJL_GET_STRING(YAJL_GET_ARRAY(node)->values[0]);
-        if (strcmp(str, VALUE) == 0)
+        if (str != NULL && strcmp(str, VALUE) == 0)
             return 0;
     }
     return 1;

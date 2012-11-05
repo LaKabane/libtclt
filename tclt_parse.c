@@ -25,14 +25,14 @@
 
 static int no_arg_dispatch(void *ptr);
 static int peer_arg_dispatch(void *ptr);
-static int peer_name_arg_dispatch(void *ptr);
+static int string_arg_dispatch(void *ptr);
 
 static call_command dispatch_cmd [] =
     {
         {ADD_PEER_CMD, peer_arg_dispatch},
-        {DELETE_PEER_CMD, peer_name_arg_dispatch},
+        {DELETE_PEER_CMD, string_arg_dispatch},
         {EDIT_PEER_CMD, no_arg_dispatch},
-        {ADD_LOG_CMD, no_arg_dispatch}
+        {ADD_LOG_CMD, string_arg_dispatch}
     };
 
 yajl_val
@@ -62,7 +62,7 @@ no_arg_dispatch(void *ptr)
     fun_args *args = ptr;
     int  (*f)(void*);
 
-    f = get_callback_command(args->name);
+    f = tclt_get_callback_command(args->name);
     if (f == NULL)
     {
         fprintf(stderr, "Command not found : %s\n", args->name);
@@ -141,7 +141,7 @@ peer_arg_dispatch(void *ptr)
     node = args->node;
     if (node == NULL)
         return 1;
-    f = get_callback_command(args->name);
+    f = tclt_get_callback_command(args->name);
     if (f == NULL)
     {
         fprintf(stderr, "Command not found : %s\n", args->name);
@@ -154,7 +154,7 @@ peer_arg_dispatch(void *ptr)
 }
 
 static int
-peer_name_arg_dispatch(void *ptr)
+string_arg_dispatch(void *ptr)
 {
     fun_args *args = ptr;
     yajl_val node = args->node;
@@ -164,7 +164,7 @@ peer_name_arg_dispatch(void *ptr)
 
     if (node == NULL)
         return 1;
-    f = get_callback_command(args->name);
+    f = tclt_get_callback_command(args->name);
     if (f == NULL)
     {
         fprintf(stderr, "Command not found : %s\n", args->name);

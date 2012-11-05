@@ -97,7 +97,7 @@ test6()
 {
     char *res = NULL;
 
-    set_callback_command(DELETE_PEER_CMD, delete_peer_to_parse);
+    tclt_set_callback_command(DELETE_PEER_CMD, delete_peer_to_parse);
     if ((res = tclt_delete_peer(CONTACT1_NAME)) == NULL)
         return 1;
     if (tclt_dispatch_command(res) != 0)

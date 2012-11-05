@@ -193,7 +193,7 @@ test7()
         fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
-    set_callback_command(ADD_PEER_CMD, &test_valid_string_parser);
+    tclt_set_callback_command(ADD_PEER_CMD, &test_valid_string_parser);
     if (tclt_dispatch_command(res) != 0)
         return 1;
     free(res);
