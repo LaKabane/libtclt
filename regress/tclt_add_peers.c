@@ -36,11 +36,15 @@
 #define CONTACT2_IP "10.0.0.2"
 #define CONTACT3_IP "10.0.0.3"
 
+#define CONTACT1_WT_IP ""
+
 #define RES_SIMPLE    "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}]"
 #define RES_TRIPLE    "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}},{\"AddContact\":{\"Name\":\"contact2\",\"Key\":\"key2\",\"Ip\":\"10.0.0.2\"}},{\"AddContact\":{\"Name\":\"contact3\",\"Key\":\"key3\",\"Ip\":\"10.0.0.3\"}}]"
 #define RES_SIMPLE_WT_KEY    "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"\",\"Ip\":\"10.0.0.1\"}}]"
 #define RES_SIMPLE_WT_IP    "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"\"}}]"
 #define RES_SIMPLE_WT_NAME    "[{\"AddContact\":{\"Name\":\"\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}]"
+
+#define TEST_WT_KEY "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\"}}]"
 
 int
 test1()
@@ -201,6 +205,27 @@ test7()
 }
 
 int
+test_without_ip_parser(void *f)
+{
+    peer *p = (peer*)f;
+
+    if (p == NULL)
+        return 1;
+    if (p->ip == NULL)
+        return 0;
+    return 1;
+}
+
+int
+test8()
+{
+    tclt_set_callback_command(ADD_PEER_CMD, &test_without_ip_parser);
+    if (tclt_dispatch_command(TEST_WT_KEY) != 1)
+        return 1;
+    return 0;
+}
+
+int
 main()
 {
     if (test1() == 1)
@@ -224,5 +249,8 @@ main()
     if (test7() == 1)
         return 1;
     printf("test7 passed\n");
+    if (test8() == 1)
+        return 1;
+    printf("test8 passed\n");
     return 0;
 }

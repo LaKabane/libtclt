@@ -75,6 +75,7 @@ static int
 tclt_get_peer_from_object_node(yajl_val node, peer *p)
 {
     unsigned int  i;
+
     if (!YAJL_IS_OBJECT(node))
     {
         return 1;
@@ -108,6 +109,8 @@ tclt_get_peer_from_object_node(yajl_val node, peer *p)
         else
             return 1;
     }
+    if (p->name == NULL || p->ip == NULL || p->key == NULL)
+        return 1;
     return 0;
 }
 
@@ -147,6 +150,7 @@ peer_arg_dispatch(void *ptr)
         fprintf(stderr, "Command not found : %s\n", args->name);
         return 1;
     }
+    memset(&p, 0, sizeof(p));
     res = tclt_get_peer_from_object_node(node, &p);
     if (res == 1)
         return 1;
