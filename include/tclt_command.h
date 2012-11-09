@@ -33,7 +33,7 @@ extern "C" {
 struct t_call_command
 {
     const char    *cmd_name;
-    int           (*f)(void *);
+    int           (*f)(void *, void *);
 };
 typedef struct t_call_command call_command;
 

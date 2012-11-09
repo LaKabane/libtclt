@@ -35,7 +35,7 @@ struct t_fun_args
     typedef struct t_fun_args fun_args;
 
     yajl_val   tclt_parse(const char *str);
-    TCLT_EXPORT int    tclt_dispatch_command(const char *str);
+    TCLT_EXPORT int    tclt_dispatch_command(const char *str, void *intern);
 
 #define BUFF_LEN 4096
 #define TCLT_KEY   "Key"
@@ -47,12 +47,3 @@ struct t_fun_args
 # endif
 
 #endif
-
-
-
-
-
-
-
-
-

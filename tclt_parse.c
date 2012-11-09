@@ -23,9 +23,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int no_arg_dispatch(void *ptr);
-static int peer_arg_dispatch(void *ptr);
-static int string_arg_dispatch(void *ptr);
+static int no_arg_dispatch(void *ptr, void*);
+static int peer_arg_dispatch(void *ptr, void*);
+static int string_arg_dispatch(void *ptr, void*);
 
 static call_command dispatch_cmd [] =
     {
@@ -57,10 +57,10 @@ tclt_parse(const char *str)
 }
 
 static int
-no_arg_dispatch(void *ptr)
+no_arg_dispatch(void *ptr, void *intern)
 {
     fun_args *args = ptr;
-    int  (*f)(void*);
+    int  (*f)(void*, void*);
 
     f = tclt_get_callback_command(args->name);
     if (f == NULL)
@@ -68,7 +68,7 @@ no_arg_dispatch(void *ptr)
         fprintf(stderr, "Command not found : %s\n", args->name);
         return 1;
     }
-    return (f(NULL));
+    return (f(NULL, intern));
 }
 
 static int
@@ -133,11 +133,11 @@ tclt_get_string_from_string_node(yajl_val node, char **p)
 }
 
 static int
-peer_arg_dispatch(void *ptr)
+peer_arg_dispatch(void *ptr, void *intern)
 {
     fun_args *args = ptr;
     yajl_val node;
-    int  (*f)(void*);
+    int  (*f)(void*, void*);
     peer    p;
     int     res = 0;
 
@@ -154,15 +154,15 @@ peer_arg_dispatch(void *ptr)
     res = tclt_get_peer_from_object_node(node, &p);
     if (res == 1)
         return 1;
-    return (f(&p));
+    return (f(&p, intern));
 }
 
 static int
-string_arg_dispatch(void *ptr)
+string_arg_dispatch(void *ptr, void *intern)
 {
     fun_args *args = ptr;
     yajl_val node = args->node;
-    int  (*f)(void*);
+    int  (*f)(void*, void*);
     char*    p;
     int      res = 0;
 
@@ -177,11 +177,11 @@ string_arg_dispatch(void *ptr)
     res = tclt_get_string_from_string_node(node, &p);
     if (res == 1)
         return 1;
-    return (f(p));
+    return (f(p, intern));
 }
 
 int
-tclt_dispatch_object_command(yajl_val node)
+tclt_dispatch_object_command(yajl_val node, void *intern)
 {
     unsigned int i;
     unsigned int j;
@@ -196,7 +196,7 @@ tclt_dispatch_object_command(yajl_val node)
         {
             if (strcmp(dispatch_cmd[j].cmd_name, tmp.name) == 0)
             {
-                res = dispatch_cmd[j].f(&tmp);
+                res = dispatch_cmd[j].f(&tmp, intern);
             }
         }
     }
@@ -204,7 +204,7 @@ tclt_dispatch_object_command(yajl_val node)
 }
 
 int
-tclt_dispatch_array_command(yajl_val node)
+tclt_dispatch_array_command(yajl_val node, void *intern)
 {
     unsigned int i;
     int     res = 1;
@@ -212,7 +212,7 @@ tclt_dispatch_array_command(yajl_val node)
     for (i=0; i < YAJL_GET_ARRAY(node)->len; ++i)
     {
         if (YAJL_IS_OBJECT(YAJL_GET_ARRAY(node)->values[i]))
-            res = tclt_dispatch_object_command(YAJL_GET_ARRAY(node)->values[i]);
+            res = tclt_dispatch_object_command(YAJL_GET_ARRAY(node)->values[i], intern);
         else
             return 1;
     }
@@ -220,7 +220,7 @@ tclt_dispatch_array_command(yajl_val node)
 }
 
 int
-tclt_dispatch_command(const char *str)
+tclt_dispatch_command(const char *str, void *intern)
 {
     yajl_val node;
     int    res = 1;
@@ -233,11 +233,11 @@ tclt_dispatch_command(const char *str)
     }
     if (YAJL_IS_ARRAY(node))
     {
-        res = tclt_dispatch_array_command(node);
+        res = tclt_dispatch_array_command(node, intern);
     }
     if (YAJL_IS_OBJECT(node))
     {
-        res = tclt_dispatch_object_command(node);
+        res = tclt_dispatch_object_command(node, intern);
     }
     free(node);
     return res;

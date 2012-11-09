@@ -51,7 +51,7 @@ tclt_get_version(void) {
 }
 
 int
-tclt_set_callback_command(const char *cmd, int (*f)(void*))
+tclt_set_callback_command(const char *cmd, int (*f)(void*, void*))
 {
     unsigned int i;
 
