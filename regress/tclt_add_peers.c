@@ -168,10 +168,11 @@ test6()
 }
 
 int
-test_valid_string_parser(void *f)
+test_valid_string_parser(void *f, void *intern)
 {
     peer *p = (peer*)f;
 
+    (void)intern;
     if (p == NULL || strcmp(p->name, CONTACT1_NAME) != 0 || strcmp(p->ip, CONTACT1_IP) != 0 || strcmp(p->key, CONTACT1_KEY) != 0)
         return 1;
     return 0;
@@ -198,17 +199,18 @@ test7()
         return 1;
     }
     tclt_set_callback_command(ADD_PEER_CMD, &test_valid_string_parser);
-    if (tclt_dispatch_command(res) != 0)
+    if (tclt_dispatch_command(res, NULL) != 0)
         return 1;
     free(res);
     return 0;
 }
 
 int
-test_without_ip_parser(void *f)
+test_without_ip_parser(void *f, void* intern)
 {
     peer *p = (peer*)f;
 
+    (void)intern;
     if (p == NULL)
         return 1;
     if (p->ip == NULL)
@@ -220,7 +222,7 @@ int
 test8()
 {
     tclt_set_callback_command(ADD_PEER_CMD, &test_without_ip_parser);
-    if (tclt_dispatch_command(TEST_WT_KEY) != 1)
+    if (tclt_dispatch_command(TEST_WT_KEY, NULL) != 1)
         return 1;
     return 0;
 }

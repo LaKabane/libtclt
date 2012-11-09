@@ -82,10 +82,11 @@ test5()
 }
 
 int
-delete_peer_to_parse(void *f)
+delete_peer_to_parse(void *f, void* intern)
 {
     char *name = (char *)f;
 
+    (void)intern;
     if (strcmp(name, CONTACT1_NAME) != 0)
         return 1;
     fprintf(stderr, "name[%s]\n",name);
@@ -100,7 +101,7 @@ test6()
     tclt_set_callback_command(DELETE_PEER_CMD, delete_peer_to_parse);
     if ((res = tclt_delete_peer(CONTACT1_NAME)) == NULL)
         return 1;
-    if (tclt_dispatch_command(res) != 0)
+    if (tclt_dispatch_command(res, NULL) != 0)
         return 1;
     return 0;
 }
