@@ -63,7 +63,7 @@ if (Windows)
 
 	# Windows source files
 	# ------------------
-	set(HEADERS_LIST 
+	set(HEADERS_LIST
 	  )
 	set(SOURCES_LIST ${SOURCES_LIST} ${HEADERS_LIST}
 	  )
@@ -167,4 +167,9 @@ include(${CMAKE_SOURCE_DIR}/CMakeLists.txt.link.local OPTIONAL)
 if (UNIX)
 	install (TARGETS tclt DESTINATION lib)
 	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_json.h DESTINATION include)
+	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt.h DESTINATION include)
+	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_import.h DESTINATION include)
+	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_parse.h DESTINATION include)
+	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_command.h DESTINATION include)
+	install (FILES ${CMAKE_HOME_DIRECTORY}/include/tclt_format.h DESTINATION include)
 endif (UNIX)
