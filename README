@@ -9,7 +9,35 @@ libtclt is a library that allow the implementation of a tNETacle client.
 Supported Features
 ------------------
 
-Nothing actually.
+General :
+   * tclt_get_version : get the version number of libtclt
+
+Protocol client-core :
+   * tclt_add_peers : create a request string to add peers
+   * tclt_delete_peer : create a request string to delete a peer
+   * tclt_add_log : create a request string to add a log
+
+Supported Features
+------------------
+
+General :
+
+Protocol client-core :
+   * tclt_add_connection : create a request string to add peer and connect to it
+   * tclt_add_key_for_client : create a request string to add a public key to allow a client to connect to the core
+   * tclt_add_key_for_peer : create a request string to add a public key to allow a peer to connect to the core
+   * tclt_add_list_of_peers : create a request string to add peers
+   * tclt_add_peer_to_group : create a request string to add a peer to a group
+   * tclt_add_public_key : create a request string to add another public key to a peer
+   * tclt_add_tunnel : create a request string to create a tunnel between peers inside a group
+   * tclt_clear_group : create a request string to empty a tunnel
+   * tclt_clear_peers : create a request string to delete all peers known by the core
+   * tclt_create_group : create a request string to create a group
+   * tclt_delete_connection : create a request string to disconnect a peer
+   * tclt_destroy_group : create a request string to delete a group
+   * tclt_edit_config : create a request string to change the core configuration
+   * tclt_edit_peer : create a request string to change the peer information
+   * tclt_stop_tunnel : create a request string to 
 
 Supported Systems
 -----------------
@@ -19,11 +47,17 @@ Supported Systems
    * NetBSD
    * FreeBSD
    * Darwin
+   * Windows
 
 Soon Supported Systems
 ----------------------
 
-   * Windows
+   * Works on every system
+
+Depends
+----------
+
+   * Yajl 2 (You can find it at : https://github.com/lloyd/yajl)
 
 License
 -------
