@@ -60,8 +60,6 @@ set (ALL_TESTS
 #  tclt_destroy_group
 #  tclt_edit_config
 #  tclt_edit_peer
-#  tclt_get_versin
-#  tclt_init
 #  tclt_stop_tunnel
   tclt_add_log
 )
