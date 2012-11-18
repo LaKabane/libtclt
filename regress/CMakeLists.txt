@@ -27,8 +27,6 @@ set(REGRESS_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 enable_testing()
 set(TCLT tclt) 
 
-message(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
 if(UNIX)
   link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 endif(UNIX)
