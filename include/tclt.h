@@ -34,14 +34,14 @@ typedef struct t_peer peer;
 TCLT_EXPORT void    tclt_init(void);
 TCLT_EXPORT void    tclt_destroy(void);
 TCLT_EXPORT int     tclt_get_version(void);
-    TCLT_EXPORT int     tclt_set_callback_command(const char *cmd, int (*f)(void*, void*));
+TCLT_EXPORT int     tclt_set_callback_command(const char *cmd, int (*f)(void*, void*));
 TCLT_EXPORT void*    tclt_get_callback_command(const char *cmd);
 
 /*
 *** Peer related
  */
-TCLT_EXPORT char    *tclt_add_peers(peer *peers, unsigned int nb);
-TCLT_EXPORT void    tclt_add_list_of_peers();
+TCLT_EXPORT char    *tclt_add_peer(peer *peer);
+TCLT_EXPORT char    *tclt_add_list_of_peers(peer *peers, unsigned int nb);
 TCLT_EXPORT char    *tclt_add_connection();
 TCLT_EXPORT void    tclt_add_tunnel();
 

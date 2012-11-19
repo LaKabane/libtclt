@@ -33,7 +33,7 @@ size_t    tclt_get_size(yajl_val node, int *ok)
     }
     if (YAJL_IS_STRING(node))
     {
-        len = 2; /* for '{' and '}' */
+        len = 2; /* for '"' and '"' */
         len += strlen(node->u.string);
     }
     else if (YAJL_IS_OBJECT(node))

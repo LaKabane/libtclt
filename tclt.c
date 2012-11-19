@@ -241,7 +241,27 @@ tclt_make_node_peer(peer *peer)
 }
 
 char*
-tclt_add_peers(peer *peers, unsigned int nb)
+tclt_add_peer(peer *peer)
+{
+    yajl_val    node = NULL;
+    char    *format = NULL;
+
+    if (peer == NULL)
+        return NULL;
+    if ((node = tclt_make_object_node(1)) == NULL)
+        return NULL;
+
+    node->u.object.keys[0] = ADD_PEER_CMD;
+    node->u.object.values[0] = tclt_make_node_peer(peer);
+    if (node->u.object.values[0] == NULL)
+        return NULL;
+    format = tclt_format(node);
+    free_node(node);
+    return format;
+}
+
+char*
+tclt_add_list_of_peers(peer *peers, unsigned int nb)
 {
     yajl_val    node = NULL;
     yajl_val tmp_node = NULL;
@@ -264,10 +284,6 @@ tclt_add_peers(peer *peers, unsigned int nb)
     format = tclt_format(node);
     free_node(node);
     return format;
-}
-
-void    tclt_add_list_of_peers()
-{
 }
 
 char    *tclt_add_connection()

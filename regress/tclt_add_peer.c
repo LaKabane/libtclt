@@ -38,18 +38,18 @@
 
 #define CONTACT1_WT_IP ""
 
-#define RES_SIMPLE    "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}]"
-#define RES_TRIPLE    "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}},{\"AddContact\":{\"Name\":\"contact2\",\"Key\":\"key2\",\"Ip\":\"10.0.0.2\"}},{\"AddContact\":{\"Name\":\"contact3\",\"Key\":\"key3\",\"Ip\":\"10.0.0.3\"}}]"
-#define RES_SIMPLE_WT_KEY    "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"\",\"Ip\":\"10.0.0.1\"}}]"
-#define RES_SIMPLE_WT_IP    "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"\"}}]"
-#define RES_SIMPLE_WT_NAME    "[{\"AddContact\":{\"Name\":\"\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}]"
+#define RES_SIMPLE    "{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}"
+#define RES_SIMPLE2    "{\"AddContact\":{\"Name\":\"contact2\",\"Key\":\"key2\",\"Ip\":\"10.0.0.2\"}}"
+#define RES_SIMPLE_WT_KEY    "{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"\",\"Ip\":\"10.0.0.1\"}}"
+#define RES_SIMPLE_WT_IP    "{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\",\"Ip\":\"\"}}"
+#define RES_SIMPLE_WT_NAME    "{\"AddContact\":{\"Name\":\"\",\"Key\":\"key1\",\"Ip\":\"10.0.0.1\"}}"
 
-#define TEST_WT_KEY "[{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\"}}]"
+#define TEST_WT_KEY "{\"AddContact\":{\"Name\":\"contact1\",\"Key\":\"key1\"}}"
 
 int
 test1()
 {
-    if (tclt_add_peers(NULL, 0) == NULL)
+    if (tclt_add_peer(NULL) == NULL)
         return 0;
     return 1;
 }
@@ -63,10 +63,10 @@ test2()
     p.name = CONTACT1_NAME;
     p.key = CONTACT1_KEY;
     p.ip = CONTACT1_IP;
-    res = tclt_add_peers(&p, 1);
+    res = tclt_add_peer(&p);
     if (res == NULL || strcmp(res, RES_SIMPLE) != 0)
     {
-        fprintf(stderr, "res=[%s]\n", res);
+        fprintf(stderr, "res=%s  %s\n", res, RES_SIMPLE);
         if (res != NULL)
             free(res);
         return 1;
@@ -78,26 +78,19 @@ test2()
 int
 test3()
 {
-    peer p[3];
+    peer p;
     char *res = NULL;
 
-    p[0].name = CONTACT1_NAME;
-    p[0].key = CONTACT1_KEY;
-    p[0].ip = CONTACT1_IP;
+    p.name = CONTACT2_NAME;
+    p.key = CONTACT2_KEY;
+    p.ip = CONTACT2_IP;
 
-    p[1].name = CONTACT2_NAME;
-    p[1].key = CONTACT2_KEY;
-    p[1].ip = CONTACT2_IP;
-
-    p[2].name = CONTACT3_NAME;
-    p[2].key = CONTACT3_KEY;
-    p[2].ip = CONTACT3_IP;
-    res = tclt_add_peers(&p[0], 3);
-    if (res == NULL || strcmp(res, RES_TRIPLE) != 0)
+    res = tclt_add_peer(&p);
+    if (res == NULL || strcmp(res, RES_SIMPLE2) != 0)
     {
+        fprintf(stderr, "res=%s  %s\n", res, RES_SIMPLE2);
         if (res != NULL)
             free(res);
-        fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
     free(res);
@@ -113,12 +106,12 @@ test4()
     p.name = CONTACT1_NAME;
     p.key = NULL;
     p.ip = CONTACT1_IP;
-    res = tclt_add_peers(&p, 1);
+    res = tclt_add_peer(&p);
     if (res == NULL || strcmp(res, RES_SIMPLE_WT_KEY) != 0)
-        {
+    {
+        fprintf(stderr, "res=[%s]\n", res);
         if (res != NULL)
             free(res);
-        fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
     free(res);
@@ -134,12 +127,12 @@ test5()
     p.name = CONTACT1_NAME;
     p.key = CONTACT1_KEY;
     p.ip = NULL;
-    res = tclt_add_peers(&p, 1);
+    res = tclt_add_peer(&p);
     if (res == NULL || strcmp(res, RES_SIMPLE_WT_IP) != 0)
     {
+        fprintf(stderr, "res=[%s]\n", res);
         if (res != NULL)
             free(res);
-        fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
     free(res);
@@ -155,12 +148,12 @@ test6()
     p.name = NULL;
     p.key = CONTACT1_KEY;
     p.ip = CONTACT1_IP;
-    res = tclt_add_peers(&p, 1);
+    res = tclt_add_peer(&p);
     if (res == NULL || strcmp(res, RES_SIMPLE_WT_NAME) != 0)
     {
+        fprintf(stderr, "res=[%s]\n", res);
         if (res != NULL)
             free(res);
-        fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
     free(res);
@@ -190,12 +183,12 @@ test7()
     p.name = CONTACT1_NAME;
     p.key = CONTACT1_KEY;
     p.ip = CONTACT1_IP;
-    res = tclt_add_peers(&p, 1);
+    res = tclt_add_peer(&p);
     if (res == NULL || strcmp(res, RES_SIMPLE) != 0)
     {
+        fprintf(stderr, "res=[%s]\n", res);
         if (res != NULL)
             free(res);
-        fprintf(stderr, "res=[%s]\n", res);
         return 1;
     }
     tclt_set_callback_command(ADD_PEER_CMD, &test_valid_string_parser);
