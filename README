@@ -13,9 +13,10 @@ General :
    * tclt_get_version : get the version number of libtclt
 
 Protocol client-core :
-   * tclt_add_peers : create a request string to add peers
+   * tclt_add_peer : create a request string to add a peer
    * tclt_delete_peer : create a request string to delete a peer
    * tclt_add_log : create a request string to add a log
+   * tclt_add_list_of_peers : create a request string to add peers
 
 Supported Features
 ------------------
@@ -26,7 +27,6 @@ Protocol client-core :
    * tclt_add_connection : create a request string to add peer and connect to it
    * tclt_add_key_for_client : create a request string to add a public key to allow a client to connect to the core
    * tclt_add_key_for_peer : create a request string to add a public key to allow a peer to connect to the core
-   * tclt_add_list_of_peers : create a request string to add peers
    * tclt_add_peer_to_group : create a request string to add a peer to a group
    * tclt_add_public_key : create a request string to add another public key to a peer
    * tclt_add_tunnel : create a request string to create a tunnel between peers inside a group
