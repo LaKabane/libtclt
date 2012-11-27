@@ -43,7 +43,7 @@ module Rtclt
     Tclt::tclt_init
     Tclt::tclt_set_callback_command Tclt::ADD_PEER_CMD, Rtclt::_add_peer_callback
     Tclt::tclt_set_callback_command Tclt::DELETE_PEER_CMD, Rtclt::_del_peer_callback
-    Tclt::tclt_set_callback_command Tclt::DELETE_PEER_CMD, Rtclt::_edit_peer_callback
+    Tclt::tclt_set_callback_command Tclt::EDIT_PEER_CMD, Rtclt::_edit_peer_callback
     Tclt::tclt_set_callback_command Tclt::ADD_LOG_CMD, Rtclt::_add_log_callback
   end
 
@@ -91,6 +91,10 @@ module Rtclt
     return Tclt::tclt_delte_peer(peer.key).read_string
   end
 
+  def Rtclt.parse(data)
+    return Tclt::tclt_dispatch_command(data, 0)
+  end
+
 # -- Private stuff -- not intended to be accessed from the outside
 
   module Tclt
@@ -127,20 +131,21 @@ module Rtclt
 
     attach_function :tclt_edit_peer, [], :void
 
-  #Group related
-
+    #Group related
     attach_function :tclt_create_group, [], :void
     attach_function :tclt_destroy_group, [], :void
     attach_function :tclt_add_peer_to_group, [], :void
     attach_function :tclt_clear_group, [], :void
 
-  #Administration related
-
+    #Administration related
     attach_function :tclt_edit_config, [], :void
     attach_function :tclt_add_public_key, [], :void
     attach_function :tclt_add_key_for_peer, [], :void
     attach_function :tclt_add_key_for_client, [], :void
     #attach_function :tclt_add_log, [:string], :pointer for tNETacle core
+
+    #Parsing
+    attach_function :tclt_dispatch_command, [:string, :pointer], :int
   end
 
   @@callback_add_peer = nil
