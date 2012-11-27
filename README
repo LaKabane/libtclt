@@ -4,24 +4,11 @@ libtclt
 Description
 -----------
 
-libtclt is a library that allow the implementation of a tNETacle client.
+libtclt is a library that allows the implementation of a tNETacle client.
+It encapsulates the JSON-based protocol used to talk to the core.
 
-Supported Features
-------------------
-
-General :
-   * tclt_get_version : get the version number of libtclt
-
-Protocol client-core :
-   * tclt_add_peer : create a request string to add a peer
-   * tclt_delete_peer : create a request string to delete a peer
-   * tclt_add_log : create a request string to add a log
-   * tclt_add_list_of_peers : create a request string to add peers
-
-Supported Features
-------------------
-
-General :
+API
+---
 
 Protocol client-core :
    * tclt_add_connection : create a request string to add peer and connect to it
@@ -49,13 +36,13 @@ Supported Systems
    * Darwin
    * Windows
 
-Soon Supported Systems
-----------------------
+Binding in other languages
+--------------------------
 
-   * Works on every system
+   * Ruby
 
 Depends
-----------
+-------
 
    * Yajl 2 (You can find it at : https://github.com/lloyd/yajl)
 
