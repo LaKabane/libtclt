@@ -64,7 +64,7 @@ if (Windows)
 
 	# Windows source files
 	# ------------------
-	set(HEADERS_LIST 
+	set(HEADERS_LIST
 	  )
 	set(SOURCES_LIST ${SOURCES_LIST} ${HEADERS_LIST}
 	  )
