@@ -45,7 +45,7 @@ tclt_destroy(void) {
 	/* Do nothing for the moment */
 }
 
-int
+float
 tclt_get_version(void) {
 	return LIB_TNETACLE_CLIENT_VERSION;
 }
