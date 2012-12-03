@@ -33,6 +33,8 @@ call_command commands[] =
         {ADD_LOG_CMD, NULL}
     };
 
+static void free_node(yajl_val node);
+
 void
 tclt_init(void) {
 	/* Do nothing for the moment */
@@ -113,7 +115,7 @@ free_string(yajl_val node)
     free(node);
 }
 
-void
+static void
 free_node(yajl_val node)
 {
     if (YAJL_IS_ARRAY(node))
