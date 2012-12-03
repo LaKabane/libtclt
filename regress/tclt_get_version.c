@@ -17,7 +17,7 @@
 
 int     main(void)
 {
-    if (tclt_get_version() == LIB_TNETACLE_CLIENT_VERSION)
+    if (tclt_get_version() == (float)LIB_TNETACLE_CLIENT_VERSION)
         return 0;
     return 1;
 }
