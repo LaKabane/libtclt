@@ -50,8 +50,10 @@ int
 test2()
 {
     yajl_val node = tclt_parse(TEST_ERROR);
+
     if (node != NULL)
         return 1;
+    printf("%p\n", node);
     return 0;
 }
 
@@ -65,8 +67,14 @@ test3()
     {
         char *str = YAJL_GET_STRING(YAJL_GET_OBJECT(node)->values[0]);
         if (strcmp(str, VALUE) == 0)
+        {
+            yajl_tree_free(node);
             return 0;
+        }
+        yajl_tree_free(node);
     }
+    if (node != NULL)
+        yajl_tree_free(node);
     return 1;
 }
 
@@ -79,8 +87,14 @@ test4()
     {
         char *str = YAJL_GET_STRING(YAJL_GET_ARRAY(node)->values[0]);
         if (str != NULL && strcmp(str, VALUE) == 0)
+        {
+            yajl_tree_free(node);
             return 0;
+        }
+        yajl_tree_free(node);
     }
+    if (node != NULL)
+        yajl_tree_free(node);
     return 1;
 }
 

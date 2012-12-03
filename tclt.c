@@ -25,8 +25,6 @@
 #include "tclt_format.h"
 #include "tclt_command.h"
 
-static void free_node(yajl_val node);
-
 call_command commands[] =
     {
         {ADD_PEER_CMD, NULL},
@@ -115,7 +113,7 @@ free_string(yajl_val node)
     free(node);
 }
 
-static void
+void
 free_node(yajl_val node)
 {
     if (YAJL_IS_ARRAY(node))

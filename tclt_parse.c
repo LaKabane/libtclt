@@ -41,7 +41,7 @@ tclt_parse(const char *str)
     yajl_val node;
     char    errbuf[BUFF_LEN];
 
-    errbuf[0] = 0;
+    errbuf[0] = '\0';
     node = yajl_tree_parse(str, errbuf, sizeof(errbuf));
 
     if (node == NULL)
@@ -152,9 +152,14 @@ peer_arg_dispatch(void *ptr, void *intern)
     }
     memset(&p, 0, sizeof(p));
     res = tclt_get_peer_from_object_node(node, &p);
-    if (res == 1)
-        return 1;
-    return (f(&p, intern));
+    if (res != 1)
+    {
+        res = f(&p, intern);
+    }
+    free(p.name);
+    free(p.ip);
+    free(p.key);
+    return (res);
 }
 
 static int
@@ -163,7 +168,7 @@ string_arg_dispatch(void *ptr, void *intern)
     fun_args *args = ptr;
     yajl_val node = args->node;
     int  (*f)(void*, void*);
-    char*    p;
+    char*    s;
     int      res = 0;
 
     if (node == NULL)
@@ -174,10 +179,13 @@ string_arg_dispatch(void *ptr, void *intern)
         fprintf(stderr, "Command not found : %s\n", args->name);
         return 1;
     }
-    res = tclt_get_string_from_string_node(node, &p);
-    if (res == 1)
-        return 1;
-    return (f(p, intern));
+    res = tclt_get_string_from_string_node(node, &s);
+    if (res != 1)
+    {
+        res = f(s, intern);
+    }
+    free(s);
+    return (res);
 }
 
 int
@@ -239,6 +247,6 @@ tclt_dispatch_command(const char *str, void *intern)
     {
         res = tclt_dispatch_object_command(node, intern);
     }
-    free(node);
+    yajl_tree_free(node);
     return res;
 }

@@ -46,8 +46,13 @@ test2()
 {
     char *res = NULL;
     if ((res = tclt_delete_peer(CONTACT1_NAME)) == NULL || strcmp(res, CONTACT1_RES) != 0)
+    {
+        fprintf(stderr, "res[%s]\n",res);
+        if (res != NULL)
+            free(res);
         return 1;
-    fprintf(stderr, "res[%s]\n",res);
+    }
+    free(res);
     return 0;
 }
 
@@ -56,8 +61,13 @@ test3()
 {
     char *res = NULL;
     if ((res = tclt_delete_peer(CONTACT2_NAME)) == NULL || strcmp(res, CONTACT2_RES) != 0)
+    {
+        fprintf(stderr, "res[%s]\n",res);
+        if (res != NULL)
+            free(res);
         return 1;
-    fprintf(stderr, "res[%s]\n",res);
+    }
+    free(res);
     return 0;
 }
 
@@ -66,8 +76,14 @@ test4()
 {
     char *res = NULL;
     if ((res = tclt_delete_peer(CONTACT3_NAME)) == NULL || strcmp(res, CONTACT3_RES) != 0)
+    {
+        fprintf(stderr, "res[%s]\n",res);
+        if (res != NULL)
+            free(res);
         return 1;
+    }
     fprintf(stderr, "res[%s]\n",res);
+    free(res);
     return 0;
 }
 
@@ -76,8 +92,14 @@ test5()
 {
     char *res = NULL;
     if ((res = tclt_delete_peer("")) == NULL || strcmp(res, EMPTY_RES) != 0)
+    {
+        fprintf(stderr, "res[%s]\n",res);
+        if (res != NULL)
+            free(res);
         return 1;
+    }
     fprintf(stderr, "res[%s]\n",res);
+    free(res);
     return 0;
 }
 
@@ -88,8 +110,10 @@ delete_peer_to_parse(void *f, void* intern)
 
     (void)intern;
     if (strcmp(name, CONTACT1_NAME) != 0)
+    {
+        fprintf(stderr, "name[%s]\n",name);
         return 1;
-    fprintf(stderr, "name[%s]\n",name);
+    }
     return 0;
 }
 
@@ -100,9 +124,15 @@ test6()
 
     tclt_set_callback_command(DELETE_PEER_CMD, delete_peer_to_parse);
     if ((res = tclt_delete_peer(CONTACT1_NAME)) == NULL)
+    {
+        fprintf(stderr, "res[%s]\n",res);
+        if (res != NULL)
+            free(res);
         return 1;
+    }
     if (tclt_dispatch_command(res, NULL) != 0)
         return 1;
+    free(res);
     return 0;
 }
 

@@ -47,8 +47,11 @@ test2()
     if (res == NULL || strcmp(res, RES_NOLOG) != 0)
     {
         printf("%s\n", res);
+        if (res != NULL)
+            free(res);
         return 1;
     }
+    free(res);
     return 0;
 }
 
@@ -61,8 +64,11 @@ test3()
     if (res == NULL || strcmp(res, RES_REAL_LOG) != 0)
     {
         printf("%s\n", res);
+        if (res != NULL)
+            free(res);
         return 1;
     }
+    free(res);
     return 0;
 }
 
