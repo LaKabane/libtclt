@@ -23,28 +23,12 @@ module Rtclt
     attr_accessor :ip
   end
 
-  def Rtclt.test
-    Tclt::tclt_init
-    puts Tclt::tclt_get_version
-    Tclt::tclt_destroy
-    test = Tclt::Peer.new
-    test[:name] = FFI::MemoryPointer.from_string "Name..."
-    test[:key] = FFI::MemoryPointer.from_string "key :)"
-    test[:ip] = FFI::MemoryPointer.from_string "127.0.0.1"
-    puts test[:ip].read_string
-    puts Tclt::tclt_add_peer(test).read_string
-    Rtclt::set_callback_add_peer do |peer|
-      puts peer.name
-    end
-    Rtclt::_add_peer_callback test, 'lol'
-  end
-
   def Rtclt.init
     Tclt::tclt_init
-    Tclt::tclt_set_callback_command Tclt::ADD_PEER_CMD, Rtclt::_add_peer_callback
-    Tclt::tclt_set_callback_command Tclt::DELETE_PEER_CMD, Rtclt::_del_peer_callback
-    Tclt::tclt_set_callback_command Tclt::EDIT_PEER_CMD, Rtclt::_edit_peer_callback
-    Tclt::tclt_set_callback_command Tclt::ADD_LOG_CMD, Rtclt::_add_log_callback
+    Tclt::tclt_set_callback_command Tclt::ADD_PEER_CMD do |a,b| Rtclt::_add_peer_callback a,b end
+    Tclt::tclt_set_callback_command Tclt::DELETE_PEER_CMD do |a,b| Rtclt::_del_peer_callback a,b end
+    Tclt::tclt_set_callback_command Tclt::EDIT_PEER_CMD do |a,b| Rtclt::_edit_peer_callback a,b end
+    Tclt::tclt_set_callback_command Tclt::ADD_LOG_CMD do |a,b| Rtclt::_add_log_callback end
   end
 
   def Rtclt.destroy
@@ -72,7 +56,7 @@ module Rtclt
   end
 
   def Rtclt.set_callback_edit_peer(&callback)
- if callback.respond_to?("call")
+    if callback.respond_to?("call")
       @@callback_edit_peer = callback;
     else
       puts "ERROR: callback is not callable"
@@ -92,7 +76,7 @@ module Rtclt
   end
 
   def Rtclt.parse(data)
-    return Tclt::tclt_dispatch_command(data, 0)
+    return Tclt::tclt_dispatch_command(data, nil)
   end
 
 # -- Private stuff -- not intended to be accessed from the outside
@@ -115,7 +99,7 @@ module Rtclt
 
     #peer related
     class Peer < FFI::Struct
-      layout  :name, :pointer,
+      layout :name, :pointer,
       :key, :pointer,
       :ip, :pointer
     end
@@ -155,7 +139,7 @@ module Rtclt
 
   def Rtclt._add_peer_callback(peer, internal)
     if !@@callback_add_peer.nil?
-      @@callback_add_peer.call Rtclt::_Tclt_peer_to_Rtclt peer
+      @@callback_add_peer.call Rtclt::_Tclt_peer_to_Rtclt Tclt::Peer.new peer
     end
   end
 
@@ -167,13 +151,13 @@ module Rtclt
 
   def Rtclt._del_peer_callback(peer, internal)
     if !@@callback_del_peer.nil?
-      @@callback_del_peer.call Rtclt::_Tclt_peer_to_Rtclt peer
+      @@callback_del_peer.call Rtclt::_Tclt_peer_to_Rtclt Tclt::Peer.new peer
     end
   end
 
   def Rtclt._edit_peer_callback(peer, internal)
     if !@@callback_edit_peer.nil?
-      @@callback_edit_peer.call Rtclt::_Tclt_peer_to_Rtclt peer
+      @@callback_edit_peer.call Rtclt::_Tclt_peer_to_Rtclt Tclt::Peer.new peer
     end
   end
 
@@ -186,4 +170,4 @@ module Rtclt
   end
 
 end
-Rtclt::test
+#Rtclt::test
