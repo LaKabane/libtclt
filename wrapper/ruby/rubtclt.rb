@@ -28,7 +28,7 @@ module Rtclt
     Tclt::tclt_set_callback_command Tclt::ADD_PEER_CMD do |a,b| Rtclt::_add_peer_callback a,b end
     Tclt::tclt_set_callback_command Tclt::DELETE_PEER_CMD do |a,b| Rtclt::_del_peer_callback a,b end
     Tclt::tclt_set_callback_command Tclt::EDIT_PEER_CMD do |a,b| Rtclt::_edit_peer_callback a,b end
-    Tclt::tclt_set_callback_command Tclt::ADD_LOG_CMD do |a,b| Rtclt::_add_log_callback end
+    Tclt::tclt_set_callback_command Tclt::ADD_LOG_CMD do |a,b| Rtclt::_add_log_callback a,b end
   end
 
   def Rtclt.destroy
@@ -71,8 +71,12 @@ module Rtclt
     end
   end
 
+  def Rtclt.add_peer(peer)
+    return Tclt::tclt_add_peer(Rtclt::_Rtclt_peer_to_tclt(peer)).read_string
+  end
+
   def Rtclt.delete_peer(peer)
-    return Tclt::tclt_delte_peer(peer.key).read_string
+    return Tclt::tclt_delete_peer(peer.key).read_string
   end
 
   def Rtclt.parse(data)
@@ -137,6 +141,12 @@ module Rtclt
   @@callback_edit_peer = nil
   @@callback_add_log = nil
 
+  def Rtclt._add_log_callback(log, internal)
+    if !@@callback_add_log.nil?
+      @@callback_add_log.call log.read_string
+    end
+  end
+
   def Rtclt._add_peer_callback(peer, internal)
     if !@@callback_add_peer.nil?
       @@callback_add_peer.call Rtclt::_Tclt_peer_to_Rtclt Tclt::Peer.new peer
@@ -144,12 +154,13 @@ module Rtclt
   end
 
   def Rtclt._edit_peer_callback(external, internal)
-    if !@@callback_add_log.nil?
-      @@callback_edit_peer.call external.read_string
+    if !@@callback_edit_peer.nil?
+     @@callback_edit_peer.call external.read_string
     end
   end
 
   def Rtclt._del_peer_callback(peer, internal)
+    return
     if !@@callback_del_peer.nil?
       @@callback_del_peer.call Rtclt::_Tclt_peer_to_Rtclt Tclt::Peer.new peer
     end
@@ -169,5 +180,14 @@ module Rtclt
     return rPeer
   end
 
+  def Rtclt._Rtclt_peer_to_tclt(peer)
+    tPeer = Tclt::Peer.new
+    tPeer[:name] = FFI::MemoryPointer.new :pointer
+    tPeer[:key] = FFI::MemoryPointer.new :pointer
+    tPeer[:ip] = FFI::MemoryPointer.new :pointer
+    tPeer[:name].put_bytes 0, peer.name
+    tPeer[:key].put_bytes 0, peer.name
+    tPeer[:ip].put_bytes 0, peer.name
+    return tPeer
+  end
 end
-#Rtclt::test
